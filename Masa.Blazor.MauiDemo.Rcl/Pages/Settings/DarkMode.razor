@@ -1,0 +1,100 @@
+﻿@page "/settings/dark-mode"
+@using Masa.Blazor.MauiDemo.Platforms
+@inject IPlatformIntegration PlatformIntegration
+
+<PPageStackItemInit Title="Dark Mode">
+</PPageStackItemInit>
+
+<div class="pa-4">
+    <MList Class="rounded mb-3">
+        <MListItem ThreeLine>
+            <MListItemContent>
+                <MListItemTitle>Automatic</MListItemTitle>
+                <MListItemSubtitle>
+                    When enabled, the app will switch dark mode on/off to match your system settings.
+                </MListItemSubtitle>
+            </MListItemContent>
+            <MListItemAction>
+                <MSwitch Inset
+                         Dense
+                         Value="@(theme == 0)"
+                         ValueChanged="AutoChanged"
+                         TValue="bool">
+                </MSwitch>
+            </MListItemAction>
+        </MListItem>
+    </MList>
+    @if (theme != 0)
+    {
+        <MList Class="rounded">
+            <MListItemGroup Color="primary"
+                            Mandatory
+                            Value="theme"
+                            ValueChanged="@ToggleTheme">
+                <MListItem Value="1">
+                    <ItemContent>
+                        <MListItemContent>
+                            <MListItemTitle>Light Mode</MListItemTitle>
+                        </MListItemContent>
+                        <MListItemAction>
+                            <FadeTransition>
+                                <MIcon If="@context.Active">mdi-check</MIcon>
+                            </FadeTransition>
+                        </MListItemAction>
+                    </ItemContent>
+                </MListItem>
+                <MListItem Value="2">
+                    <ItemContent>
+                        <MListItemContent>
+                            <MListItemTitle>Dark Mode</MListItemTitle>
+                        </MListItemContent>
+                        <MListItemAction>
+                            <FadeTransition>
+                                <MIcon If="@context.Active">mdi-check</MIcon>
+                            </FadeTransition>
+                        </MListItemAction>
+                    </ItemContent>
+                </MListItem>
+            </MListItemGroup>
+        </MList>
+    }
+</div>
+
+@code {
+
+    // 0: Auto, 1: Light, 2: Dark
+    private int theme;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            theme = await PlatformIntegration.GetThemeAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task AutoChanged(bool val)
+    {
+        if (val)
+        {
+            theme = 0;
+        }
+        else
+        {
+            var isDark = await PlatformIntegration.IsDarkThemeOfSystemAsync();
+            theme = isDark ? 2 : 1;
+        }
+
+        await PlatformIntegration.SetThemeAsync(theme);
+    }
+
+    private void ToggleTheme(StringNumber val)
+    {
+        var value = val.AsT1;
+        theme = value;
+        Console.Out.WriteLine("[DarkMode] Toggle theme: " + value);
+        PlatformIntegration.SetThemeAsync(value);
+    }
+
+}

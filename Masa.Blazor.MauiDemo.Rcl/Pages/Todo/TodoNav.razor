@@ -1,0 +1,69 @@
+﻿<MNavigationDrawer Value="@Show"
+                   ValueChanged="@ShowChanged"
+                   Permanent="@Permanent"
+                   Width="300"
+                   Fixed>
+    @if (ShowAddTask)
+    {
+        <MButton Block Rounded Color="primary" Class="ma-6">Add Task</MButton>
+    }
+
+    <MList Routable>
+        @foreach (var item in _categories)
+        {
+            <MListItem ActiveClass="primary--text" Href="@item.Href" Exact>
+                <ItemContent>
+                    <MListItemIcon Class="mr-4">
+                        <MIcon>@item.IconOrColor</MIcon>
+                    </MListItemIcon>
+                    <MListItemContent>
+                        <MListItemTitle>@item.Title</MListItemTitle>
+                    </MListItemContent>
+                </ItemContent>
+            </MListItem>
+        }
+
+        <MSubheader>Tags</MSubheader>
+
+        @foreach (var item in Tags)
+        {
+            <MListItem Dense ActiveClass="primary--text" Href="@($"/todo/tag/{item.Id}")" Exact>
+                @RenderFragments.GenTagItem(item)
+            </MListItem>
+        }
+        <MListItem>
+            <MButton Block Small
+                     Outlined
+                     Style="border-style: dashed;"
+                     Color="secondary"
+                     OnClick="@OnAddTagClick">
+                <MIcon Left>mdi-plus</MIcon>
+                Add Tag
+            </MButton>
+        </MListItem>
+    </MList>
+</MNavigationDrawer>
+
+@code {
+
+    [Parameter] public bool? Show { get; set; }
+
+    [Parameter] public EventCallback<bool?> ShowChanged { get; set; }
+
+    [Parameter] public bool Permanent { get; set; }
+
+    [Parameter] public bool ShowAddTask { get; set; }
+
+    [Parameter] public EventCallback OnAddTagClick { get; set; }
+
+    [Parameter] public List<TodoTag> Tags { get; set; } = [];
+
+    private static TodoNavItem[] _categories =
+    [
+        new TodoNavItem("Today", "mdi-calendar-today-outline", "/todo"),
+        new TodoNavItem("Inbox", "mdi-inbox-outline", "/todo/inbox")
+    ];
+
+    record TodoNavItem(string Title, string IconOrColor, string Href);
+
+}

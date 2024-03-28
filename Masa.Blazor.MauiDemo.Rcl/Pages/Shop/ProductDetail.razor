@@ -1,0 +1,225 @@
+﻿@page "/shop/product/{id:guid}"
+@using Masa.Blazor.MauiDemo.Rcl.Services
+@using Microsoft.JSInterop
+@inject ProductService ProductService
+@inject IPlatformIntegration PlatformIntegration
+@inject IJSRuntime JSRuntime
+@inject NavigationManager NavigationManager
+@inject IPopupService PopupService
+@inherits PStackPageBase
+
+<PageTitle>@(_product?.Name ?? "Product")</PageTitle>
+
+<PPageStackItemInit ContentClass="pt-0">
+    <ActionContent>
+        <MButton Icon Href="/">
+            <MIcon>mdi-home-outline</MIcon>
+        </MButton>
+        <MBottomSheet>
+            <ActivatorContent>
+                <MButton Icon @attributes="@context.Attrs">
+                    <MIcon>mdi-share-outline</MIcon>
+                </MButton>
+            </ActivatorContent>
+            <OutcomeContent>
+                <div class="d-flex align-start" style="min-height: 136px;">
+                    <div class="d-inline-flex flex-column justify-center mx-4"
+                         @onclick="ShareToWeChat">
+                        <MAvatar Color="#07c160">
+                            <MIcon Color="white" Size="24">$wechat</MIcon>
+                        </MAvatar>
+                        <span class="caption mt-1">WeChat</span>
+                    </div>
+                    <div class="d-inline-flex flex-column justify-center mx-4"
+                         @onclick="@CopyLink">
+                        <MAvatar Color="orange">
+                            <MIcon Dark>mdi-link-variant</MIcon>
+                        </MAvatar>
+                        <span class="caption mt-1">Copy link</span>
+                    </div>
+                </div>
+
+                <MButton Block
+                         OnClick="@context.Close"
+                         Class="text-capitalize">
+                    Cancel
+                </MButton>
+            </OutcomeContent>
+        </MBottomSheet>
+    </ActionContent>
+</PPageStackItemInit>
+
+@if (_product is not null)
+{
+    <MImage Src="@($"_content/Masa.Blazor.MauiDemo.Rcl/{_product.PictureFile}")"
+            Height="500"
+            Class="white"
+            Contain>
+    </MImage>
+
+    <div class="ma-3">
+        <MSheet class="pt-6 px-4 rounded mb-3">
+            <div class="d-flex align-baseline mb-2">
+                <MIcon Color="red" Small>mdi-currency-usd</MIcon>
+                <span class="red--text text-h5" style="line-height: 1rem;">
+                    @_product.Price
+                </span>
+            </div>
+            <div class="subtitle-1 d-flex align-center">
+                <MChip Label Color="black" Dark Small Class="mr-2 px-2"
+                       Style="min-width: min-content;">
+                    NEW
+                </MChip>
+                <div>
+                    @_product.Name
+                </div>
+            </div>
+            <MList Dense>
+                <MListItem>
+                    <MListItemContent>
+                        <MListItemTitle>库存</MListItemTitle>
+                    </MListItemContent>
+                    <MListItemAction>
+                        <MListItemActionText>现货</MListItemActionText>
+                    </MListItemAction>
+                </MListItem>
+                <MDivider/>
+                <MListItem>
+                    <MListItemContent>
+                        <MListItemTitle>配送</MListItemTitle>
+                        @if (_geoCoordinate != null)
+                        {
+                            <MListItemSubtitle Class="d-inline-flex align-center">
+                                <MIcon XSmall Class="mr-1">mdi-map-marker</MIcon>
+                                @_geoCoordinate.Latitude, @_geoCoordinate.Longitude
+                            </MListItemSubtitle>
+                        }
+                    </MListItemContent>
+                    <MListItemAction>
+                        <MListItemActionText>包邮</MListItemActionText>
+                    </MListItemAction>
+                </MListItem>
+                <MDivider/>
+                <MBottomSheet>
+                    <ActivatorContent>
+                        <MListItem @attributes="@context.Attrs">
+                            <MListItemContent>
+                                <MListItemTitle>七天无理由退货</MListItemTitle>
+                            </MListItemContent>
+                            <MListItemAction>
+                                <MIcon>$next</MIcon>
+                            </MListItemAction>
+                        </MListItem>
+                    </ActivatorContent>
+                    <OutcomeContent>
+                        <div style="min-height: 60vh">
+                            <div>
+                                <p class="text-h7">七天无理由退货</p>
+                                <p class="body-2 grey--text">满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。</p>
+                            </div>
+                        </div>
+                        <MButton Block
+                                 Color="primary"
+                                 OnClick="@context.Close"
+                                 Class="text-capitalize">
+                            Got it
+                        </MButton>
+                    </OutcomeContent>
+                </MBottomSheet>
+            </MList>
+        </MSheet>
+
+        <MSheet Class="mb-3 py-4">
+            <MListItem ThreeLine>
+                <MListItemAvatar Tile>
+                    <MImage Src="https://cdn.masastack.com/images/lonsid-logo.png?x-oss-process=image/resize,l_200"
+                            Contain>
+                    </MImage>
+                </MListItemAvatar>
+                <MListItemContent>
+                    <MListItemTitle>@_product.Brand</MListItemTitle>
+                    <MListItemSubtitle Class="my-2">
+                        <b>@_availableForSale</b> 件在售商品
+                    </MListItemSubtitle>
+                    <MListItemSubtitle>朗诗德是一家专业致力于健康饮水设备的设计、开发、生产和销售的大型企业。公司通过了ISO9001、ISO14001、OHSAS18001认证；其产品均通过CCC、CE、CB等多项国内外权威认证，并获得国家卫生部门颁发的卫生批件及多项国内外专利，畅销海内外。</MListItemSubtitle>
+                </MListItemContent>
+            </MListItem>
+        </MSheet>
+
+        <MSheet Class="pa-4 body-1 mb-3">
+            @_product.Description
+        </MSheet>
+
+        @if (_relatedProducts.Count > 0)
+        {
+            <div class="mb-3">
+                <p class="subtitle-1 text-center">相关产品</p>
+                @Shop.RenderProductList(_relatedProducts)
+            </div>
+        }
+
+        <MInfiniteScroll Parent="@PageSelector"
+                         OnLoad="@LoadRelatedProducts">
+        </MInfiniteScroll>
+    </div>
+}
+
+
+@code {
+    [Parameter] public Guid Id { get; set; }
+
+    private Product? _product;
+    private int _page = 1;
+    private GeoCoordinate? _geoCoordinate;
+
+    private bool _returnGoodsSheet;
+
+    private List<Product> _relatedProducts = [];
+    private int _availableForSale = 0;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _ = Task.Run(async () =>
+            {
+                await InvokeAsync(async () =>
+                {
+                    _geoCoordinate = await PlatformIntegration.GetCurrentCoordinateAsync();
+                    StateHasChanged();
+                });
+            });
+
+            _product = await ProductService.GetProductAsync(Id);
+
+            _availableForSale = await ProductService.GetAvailableForSaleAsync(_product.Brand);
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task LoadRelatedProducts(InfiniteScrollLoadEventArgs args)
+    {
+        if (_product == null)
+        {
+            return;
+        }
+
+        var appendProducts = await ProductService.GetProductsAsync(_page++, 5, category: _product.Category);
+        _relatedProducts.AddRange(appendProducts);
+
+        args.Status = appendProducts.Count < 5 ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
+    }
+
+    private void CopyLink()
+    {
+        _ = JSRuntime.InvokeVoidAsync(JsInteropConstants.CopyText, NavigationManager.Uri);
+        _ = PopupService.EnqueueSnackbarAsync("Link has been copied to clipboard.");
+    }
+
+    private void ShareToWeChat()
+    {
+        _ = PopupService.EnqueueSnackbarAsync("Share to WeChat is not implemented yet.");
+    }
+
+}

@@ -1,0 +1,90 @@
+﻿@using BlazorComponent
+@using Masa.Blazor
+@using Masa.Blazor.MauiDemo.Platforms
+@using Microsoft.Extensions.Logging
+@using Router = Microsoft.AspNetCore.Components.Routing.Router
+@inject IPlatformIntegration PlatformNavigation
+@inject MasaBlazor MasaBlazor
+
+<Router AppAssembly="@typeof(Main).Assembly"
+        AdditionalAssemblies="new[] { typeof(MainLayout).Assembly }"
+        OnNavigateAsync="HandleOnNavigate">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p role="alert">Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+
+@code {
+
+    private const string White = "#FFFFFF";
+    private const string Primary = "#4F33FF";
+    private const string Surface = "#F0F3FA";
+
+    private const string Dark = "#000000";
+    private const string DarkPrimary = "#C5C0FF";
+    private const string DarkSurface = "#131316";
+
+    private string _path = string.Empty;
+    private bool _dark;
+
+    private string? _statusBarColor;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _dark = MasaBlazor.Theme.Dark;
+        MasaBlazor.OnThemeChange += MasaBlazorOnOnThemeChange;
+    }
+
+    private void MasaBlazorOnOnThemeChange(Theme theme)
+    {
+        _dark = theme.Dark;
+        SetStatusBarColor();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void HandleOnNavigate(NavigationContext context)
+    {
+        _path = context.Path;
+        SetStatusBarColor();
+    }
+
+    private void SetStatusBarColor()
+    {
+        _dark = MasaBlazor.Theme.Dark;
+        int style = 0;
+
+        if (_path.StartsWith("user"))
+        {
+            var color = _dark ? DarkPrimary : Primary;
+
+            if (_statusBarColor == color) return;
+            _statusBarColor = color;
+            style = _dark ? 2 : 1;
+        }
+        else if (_path == "" || _path.StartsWith("shop/search") || _path.StartsWith("todo"))
+        {
+            var color = _dark ? DarkSurface : Surface;
+            if (_statusBarColor == color) return;
+            _statusBarColor = color;
+            style = _dark ? 1 : 2;
+        }
+        else
+        {
+            var color = _dark ? Dark : White;
+            if (_statusBarColor == color) return;
+            _statusBarColor = color;
+            style = _dark ? 1 : 2;
+        }
+
+        PlatformNavigation.SetStatusBar(_statusBarColor, style);
+    }
+
+}

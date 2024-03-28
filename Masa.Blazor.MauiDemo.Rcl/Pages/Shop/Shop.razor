@@ -1,0 +1,105 @@
+﻿@page "/"
+@using Masa.Blazor.MauiDemo.Rcl.Models
+@using Masa.Blazor.MauiDemo.Rcl.Services
+@inject ProductService ProductService
+@inject NavigationManager NavigationManager
+
+<PageTitle>Shop</PageTitle>
+
+<div class="pa-3">
+    <MAppBar Fixed
+             ElevateOnScroll
+             Class="surface">
+        <div @onclick="HandleOnTextFieldClick"
+             style="display: contents">
+            <MTextField Dense
+                        Rounded
+                        Class="rounded-r-0"
+                        TValue="string"
+                        Placeholder="@_pinnedSearch"
+                        PersistentPlaceholder
+                        HideDetails="true"
+                        Readonly>
+            </MTextField>
+            <MButton Color="primary"
+                     Rounded
+                     Depressed
+                     Height="40"
+                     Class="text-capitalize rounded-l-0"
+                     Href="@($"/shop/search?key={_pinnedSearch}")"
+                     OnClickStopPropagation>
+                Search
+            </MButton>
+        </div>
+    </MAppBar>
+
+    <div style="margin-top: 56px;">
+        @RenderProductList(_products)
+    </div>
+
+    <MInfiniteScroll Parent="@("window")"
+                     OnLoad="@HandleOnLoad">
+    </MInfiniteScroll>
+</div>
+
+@code
+{
+    internal static RenderFragment RenderProductList(List<Product> products) => __builder =>
+    {
+        <MRow Dense>
+            @foreach (var item in products)
+            {
+                <MCol Cols="6">
+                    <MCard Href="@($"/shop/product/{item.Id}")"
+                           Flat
+                           Class="pa-2">
+                        <MImage Src="@($"_content/Masa.Blazor.MauiDemo.Rcl/{item.PictureFile}")"
+                                Height="150"
+                                Contain>
+                        </MImage>
+                        <div class="subtitle-2 d-flex align-center">
+                            <MChip Label Color="black" Dark XSmall Class="mr-1 px-2"
+                                   Style="min-width: min-content;">
+                                NEW
+                            </MChip>
+                            <div class="text-truncate">
+                                @item.Name
+                            </div>
+                        </div>
+                        <div class="caption d-flex align-center">
+                            <MIcon Color="red" XSmall>mdi-currency-usd</MIcon>
+                            <span class="red--text" style="line-height: 1rem;">
+                                @item.Price
+                            </span>
+                        </div>
+                    </MCard>
+                </MCol>
+            }
+        </MRow>
+    };
+
+    private int _page = 1;
+    private string? _pinnedSearch;
+
+    private List<Product> _products = [];
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+
+        _pinnedSearch = new[] { "饮水机", "纯水机", "净化器" }.ElementAt(Random.Shared.Next(0, 2));
+    }
+
+    private async Task HandleOnLoad(InfiniteScrollLoadEventArgs args)
+    {
+        var pageSize = _page == 1 ? 10 : 5;
+        var appendProducts = await ProductService.GetProductsAsync(_page++, pageSize);
+        _products.AddRange(appendProducts);
+        args.Status = appendProducts.Count < pageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
+    }
+
+    private void HandleOnTextFieldClick()
+    {
+        NavigationManager.NavigateTo($"/shop/search?placeholder={_pinnedSearch}");
+    }
+}

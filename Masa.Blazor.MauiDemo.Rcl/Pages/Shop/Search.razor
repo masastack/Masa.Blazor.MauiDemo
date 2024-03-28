@@ -1,0 +1,171 @@
+﻿@page "/shop/search"
+@using Masa.Blazor.MauiDemo.Rcl.Models
+@using Masa.Blazor.MauiDemo.Rcl.Services
+@inject IPopupService PopupService
+@inject ProductService ProductService
+@inherits PStackPageBase
+
+<PPageStackItemInit BarColor="surface"
+                    RerenderKey="@_searchKey">
+    <BarContent>
+        <MButton Icon OnClick="@context.GoBack">
+            <MIcon>$goBack</MIcon>
+        </MButton>
+
+        <MTextField @bind-Value="_searchKey"
+                    Dense
+                    Rounded
+                    Class="rounded-r-0"
+                    TValue="string"
+                    Placeholder="@Placeholder"
+                    OnEnter="@HandleOnSearch"
+                    PersistentPlaceholder
+                    HideDetails="true"
+                    Autofocus="@(string.IsNullOrWhiteSpace(_searchKey))"
+                    Clearable
+                    OnClearClick="@(() => HandleOnInput(""))"
+                    OnInput="@HandleOnInput">
+        </MTextField>
+        <MButton Color="primary"
+                 Rounded
+                 Depressed
+                 Height="40"
+                 Class="text-capitalize rounded-l-0"
+                 OnClick="@HandleOnSearch"
+                 OnClickStopPropagation>
+            Search
+        </MButton>
+    </BarContent>
+</PPageStackItemInit>
+
+@if (_products != null)
+{
+    <div class="px-3">
+        @Shop.RenderProductList(_products)
+
+        @if (_products.Count >= FirstLoadPageSize)
+        {
+            <MInfiniteScroll Parent="@PageSelector"
+                             OnLoad="@SearchProducts">
+            </MInfiniteScroll>
+        }
+    </div>
+}
+else if (_searchHistory.Count > 0)
+{
+    <div class="white rounded-t-xl pt-4 px-3 fill-height">
+        <div class="subtitle-2 d-flex justify-space-between mb-1">
+            <span>
+                Search history
+            </span>
+            <MButton Icon Small OnClick="@ClearSearchHistory">
+                <MIcon Small>mdi-trash-can-outline</MIcon>
+            </MButton>
+        </div>
+
+        <div>
+            @foreach (var item in _searchHistory)
+            {
+                @*Href ?*@
+                <MChip Class="mr-1 mb-1" OnClick="@(() => SearchByTag(item))">@item</MChip>
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Inject] private LocalStorage LocalStorage { get; set; } = null!;
+
+    [SupplyParameterFromQuery] private string? Key { get; set; }
+
+    [SupplyParameterFromQuery] private string? Placeholder { get; set; }
+
+    private const int FirstLoadPageSize = 10;
+
+    private string? _searchKey;
+    private List<string> _searchHistory = [];
+    private List<Product>? _products;
+    private int _page = 1;
+    private int PageSize => _page == 1 ? FirstLoadPageSize : 5;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var searchHistory = await LocalStorage.GetItemAsync<List<string>>("search-history");
+            _searchHistory = searchHistory ?? [];
+
+            if (!string.IsNullOrWhiteSpace(Key))
+            {
+                _searchKey = Key;
+                await HandleOnSearch();
+            }
+
+            StateHasChanged();
+        }
+    }
+
+    private async Task HandleOnSearch()
+    {
+        if (string.IsNullOrWhiteSpace(_searchKey))
+        {
+            _searchKey = Placeholder;
+        }
+
+        if (string.IsNullOrWhiteSpace(_searchKey))
+        {
+            return;
+        }
+
+        _page = 1;
+        _products = await ProductService.GetProductsAsync(_page, PageSize, _searchKey);
+        _page++;
+
+        if (_searchHistory.Contains(_searchKey))
+        {
+            _searchHistory.Remove(_searchKey);
+        }
+
+        _searchHistory.Insert(0, _searchKey);
+        if (_searchHistory.Count > 10)
+        {
+            _searchHistory = _searchHistory.Take(10).ToList();
+        }
+
+        _ = LocalStorage.SetItemAsync("search-history", _searchHistory);
+    }
+
+    private async Task SearchProducts(InfiniteScrollLoadEventArgs args)
+    {
+        _page++;
+        var appendProducts = await ProductService.GetProductsAsync(_page, PageSize, _searchKey);
+        _products ??= new();
+        _products.AddRange(appendProducts);
+        args.Status = appendProducts.Count < PageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
+    }
+
+    private async Task SearchByTag(string tag)
+    {
+        _searchKey = tag;
+        await HandleOnSearch();
+    }
+
+    private async Task ClearSearchHistory()
+    {
+        var confirmed = await PopupService.ConfirmAsync("Delete all search history?", AlertTypes.Error);
+        if (confirmed)
+        {
+            _searchHistory.Clear();
+            _ = LocalStorage.RemoveItemAsync("search-history");
+        }
+    }
+
+    private void HandleOnInput(string val)
+    {
+        if (string.IsNullOrWhiteSpace(val))
+        {
+            _products = null;
+        }
+    }
+
+}

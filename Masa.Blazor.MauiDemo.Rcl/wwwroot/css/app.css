@@ -1,0 +1,61 @@
+﻿/* reset */
+
+.theme--light.m-app-bar.m-toolbar.m-sheet {
+  background: #FFFFFF;
+}
+
+.theme--dark.m-app-bar.m-toolbar.m-sheet {
+  background: #000000;
+}
+
+.m-page-stack-item {
+  background: var(--m-theme-surface) !important;
+}
+
+.m-expansion-panel::before {
+  box-shadow: none;
+}
+
+.m-expansion-panel:not(:first-child)::after {
+  border-top: none;
+}
+
+.m-expansion-panel-content__wrap {
+  padding: 0 8px 8px;
+}
+
+.m-expansion-panel--active>.m-expansion-panel-header {
+  min-height: inherit;
+}
+
+.m-application--is-ltr .m-list-item__action:first-child, .m-application--is-ltr .m-list-item__icon:first-child {
+  margin-right: 16px;
+}
+
+.m-sheet > .m-list {
+  background: inherit;
+  border-radius: inherit;
+}
+
+/* custom */
+
+.priority--default {
+}
+
+.priority--high {
+  color: #F44336;
+}
+
+.priority--medium {
+  color: #FF9800;
+}
+
+.priority--low {
+  color: #2196F3;
+}
+
+.m-simple-checkbox.priority--high .m-icon,
+.m-simple-checkbox.priority--medium .m-icon,
+.m-simple-checkbox.priority--low .m-icon{
+  color: inherit;
+}

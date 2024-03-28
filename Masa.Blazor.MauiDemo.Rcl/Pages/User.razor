@@ -1,0 +1,102 @@
+﻿@page "/user"
+@inject MasaBlazor MasaBlazor
+
+<PageTitle>User</PageTitle>
+
+<MAppBar Color="primary"
+         Flat
+         Fixed>
+    <ChildContent>
+        <MAvatar Size="48" Color="white">
+            <MImage Src="_content/Masa.Blazor.MauiDemo.Rcl/img/masastack.png"
+                    Contain
+                    MaxWidth="44"
+                    alt="masastack">
+            </MImage>
+        </MAvatar>
+        <span class="subtitle-1 px-2">MASA Team</span>
+        <MSpacer/>
+        <MButton Icon Href="/settings" Light="@(MasaBlazor.Theme.Dark)" Dark="@(!MasaBlazor.Theme.Dark)">
+            <MIcon>mdi-cog-outline</MIcon>
+        </MButton>
+    </ChildContent>
+</MAppBar>
+
+<div class="primary" style="height: 64px;"></div>
+
+<div class="pa-3">
+    <div class="primary"
+         style="width: 100vw; height: 64px; margin-left: -12px; margin-top: -12px; position: absolute;">
+    </div>
+
+    <MCard class="mb-3" Flat>
+        <MCardText>
+            <div class="d-flex align-center mb-1">
+                <MIcon Small Class="mr-1">mdi-account-multiple-outline</MIcon>
+                <b>270</b>&nbsp;followers
+            </div>
+            <div class="d-flex align-center mb-1">
+                <MIcon Small Class="mr-1">mdi-map-marker-outline</MIcon>
+                <span>Hangzhou, China</span>
+            </div>
+            <div class="d-flex align-center mb-1">
+                <MIcon Small Class="mr-1">mdi-link-variant</MIcon>
+                <a href="https://masastack.com">masastack.com</a>
+            </div>
+            <div class="d-flex align-center">
+                <MIcon Small Class="mr-1">mdi-file-document-outline</MIcon>
+                <a href="https://docs.masastack.com">docs.masastack.com</a>
+            </div>
+        </MCardText>
+    </MCard>
+    @foreach (var repo in Repos)
+    {
+        <MCard Class="mb-3" Flat>
+            <MCardTitle Class="subtitle-2 font-weight-black">
+                <a href="@repo.Href" class="text-decoration-none">
+                    @repo.Title
+                </a>
+            </MCardTitle>
+            <MCardText>
+                <p>
+                    @repo.Description
+                </p>
+                <div>
+                    <span class="mr-3">
+                        <MIcon Dense
+                               Color="@(LanguageColors[repo.Language])">
+                            mdi-circle
+                        </MIcon> <span>@repo.Language</span>
+                    </span>
+                    <span class="mr-3">
+                        <MIcon Dense>mdi-star-outline</MIcon> <span>@repo.Stars</span>
+                    </span>
+                    <span class="mr-3">
+                        <MIcon Dense>mdi-source-fork</MIcon> <span>@repo.Forks</span>
+                    </span>
+                </div>
+            </MCardText>
+        </MCard>
+    }
+</div>
+
+@code {
+
+    private static readonly Repo[] Repos =
+    [
+        new("MASA.Framework", "https://github.com/masastack/MASA.Framework", "Provide open, community driven reusable components for building modern applications. These components will be used by the MASA Stack and MASA Labs projects.", "C#", 679, 106),
+        new("MASA.Blazor", "https://github.com/masastack/MASA.Blazor", "Blazor UI component library based on Material Design. Support Blazor Server, Blazor WebAssembly and MAUI Blazor.", "C#", 1100, 140),
+        new("MASA.Blazor.Pro", "https://github.com/masastack/MASA.Blazor.Pro", "Material design admin template for blazor.", "HTML", 219, 47),
+        new("MASA.Auth", "https://github.com/masastack/MASA.Auth", "MASA Auth是MASA Stack中最核心的功能之一，它统一负责了所有产品的权限、菜单、用户等。它包含了单点登录、用户管理、RBAC3、第三方平台接入、Ldap等企业级功能。除了可以用在企业内部管理系统，它还可以帮助管理C端用户", "C#", 70, 14),
+        new("MASA.MC", "https://github.com/masastack/MASA.MC", "MASA Stack 1.0 系统合集中底层支持消息发送的一款综合性产品，担任了全局消息系统支持多渠道的配置与消息发送规则的配置，并且可以配置多种消息模板以及特定用户组群。可以与关联产品Alert、TSC等对接，一站式解决故障问题触发与处理", "C#", 17, 5),
+    ];
+
+    private static readonly Dictionary<string, string> LanguageColors = new()
+    {
+        { "C#", "green" },
+        { "HTML", "red" }
+    };
+
+    record Repo(string Title, string Href, string Description, string Language, int Stars, int Forks);
+
+}
