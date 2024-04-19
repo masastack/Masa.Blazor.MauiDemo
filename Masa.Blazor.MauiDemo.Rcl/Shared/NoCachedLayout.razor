@@ -1,0 +1,22 @@
+﻿@inherits LayoutComponentBase
+@inject IPlatformIntegration PlatformIntegration
+
+<MApp>
+    <MMain>
+        <MContainer>
+            @Body
+        </MContainer>
+    </MMain>
+</MApp>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await PlatformIntegration.InitThemeAsync();
+        }
+    }
+
+}

@@ -1,0 +1,11 @@
+﻿@inject NavigationManager Navigation
+@layout NoCachedLayout
+
+@code {
+
+    protected override void OnInitialized()
+    {
+        Navigation.NavigateTo("login");
+    }
+
+}

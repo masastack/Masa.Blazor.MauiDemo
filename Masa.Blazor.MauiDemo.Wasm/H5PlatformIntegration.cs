@@ -2,7 +2,7 @@
 using Masa.Blazor.MauiDemo.Platforms;
 using Microsoft.JSInterop;
 
-namespace Masa.Blazor.MauiDemo.Server;
+namespace Masa.Blazor.MauiDemo.Wasm;
 
 public class H5PlatformIntegration : IPlatformIntegration
 {

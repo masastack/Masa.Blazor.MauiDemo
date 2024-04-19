@@ -1,4 +1,6 @@
 ﻿@page "/settings"
+@using Masa.Blazor.MauiDemo.JwtAuth
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 <PageTitle>Settings</PageTitle>
 
@@ -16,7 +18,7 @@
             </MListItemAction>
         </MListItem>
     </MList>
-    <MList Class="rounded">
+    <MList Class="rounded mb-3">
         <MListItem Href="/settings/about-us">
             <MListItemContent>
                 <MListItemTitle>About us</MListItemTitle>
@@ -26,4 +28,20 @@
             </MListItemAction>
         </MListItem>
     </MList>
+    <MList Class="rounded">
+        <MListItem OnClick="@Logout">
+            <MListItemContent>
+                <MListItemTitle Class="error--text font-weight-bold text-center">Log Out</MListItemTitle>
+            </MListItemContent>
+        </MListItem>
+    </MList>
 </div>
+
+@code {
+
+    private async Task Logout()
+    {
+        ((MauiDemoAuthenticationStateProvider)AuthenticationStateProvider).Logout();
+    }
+
+}

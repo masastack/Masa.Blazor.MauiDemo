@@ -97,7 +97,9 @@ public class MauiPlatformIntegration : IPlatformIntegration
     public Task InitThemeAsync()
     {
         var result = Preferences.Default.Get<int>(AppThemeKey, -1);
-        var isDark = result < 1 ? Microsoft.Maui.Controls.Application.Current.RequestedTheme == AppTheme.Dark : result == 2;
+        var isDark = result < 1
+            ? Microsoft.Maui.Controls.Application.Current.RequestedTheme == AppTheme.Dark
+            : result == 2;
         _masaBlazor.SetTheme(isDark);
         return Task.CompletedTask;
     }
@@ -105,12 +107,31 @@ public class MauiPlatformIntegration : IPlatformIntegration
     public ValueTask<int> GetThemeAsync()
     {
         var result = Preferences.Default.Get<int>(AppThemeKey, -1);
-        return new ValueTask<int>(result == -1 ? (int)Microsoft.Maui.Controls.Application.Current.RequestedTheme : result);
+        return new ValueTask<int>(result == -1
+            ? (int)Microsoft.Maui.Controls.Application.Current.RequestedTheme
+            : result);
     }
 
     public ValueTask<bool> IsDarkThemeOfSystemAsync()
     {
         return ValueTask.FromResult(Microsoft.Maui.Controls.Application.Current.RequestedTheme == AppTheme.Dark);
+    }
+
+    public Task SetCacheAsync<TValue>(string key, TValue value)
+    {
+        Preferences.Default.Set(key, value);
+        return Task.CompletedTask;
+    }
+
+    public Task<TValue> GetCacheAsync<TValue>(string key, TValue defaultValue)
+    {
+        return Task.FromResult(Preferences.Default.Get(key, defaultValue));
+    }
+
+    public Task RemoveCacheAsync(string key)
+    {
+        Preferences.Default.Remove(key);
+        return Task.CompletedTask;
     }
 
     private async Task<Location?> GetCachedLocationAsync()

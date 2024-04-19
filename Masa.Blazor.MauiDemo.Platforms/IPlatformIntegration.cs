@@ -35,4 +35,10 @@ public interface IPlatformIntegration
     /// </summary>
     /// <returns></returns>
     ValueTask<bool> IsDarkThemeOfSystemAsync();
+
+    Task SetCacheAsync<TValue>(string key, TValue value);
+
+    Task<TValue> GetCacheAsync<TValue>(string key, TValue defaultValue);
+
+    Task RemoveCacheAsync(string key);
 }

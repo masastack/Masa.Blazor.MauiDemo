@@ -1,0 +1,102 @@
+﻿@page "/login"
+@using System.Diagnostics.CodeAnalysis
+@using Masa.Blazor.MauiDemo.JwtAuth
+@layout NoCachedLayout
+@attribute [AllowAnonymous]
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<div class="login">
+    <div class="text-right">
+        <MButton Text Class="text-capitalize">Sign Up</MButton>
+    </div>
+
+    <MAvatar Size="72"
+             Color="white">
+        <MImage Src="_content/Masa.Blazor.MauiDemo.Rcl/img/masastack.png"
+                Contain
+                MaxWidth="64"
+                alt="masastack">
+        </MImage>
+    </MAvatar>
+
+    <MTextField @bind-Value="@_username"
+                HideDetails="true"
+                Placeholder="Email or phone"
+                Clearable>
+    </MTextField>
+
+    <MTextField @bind-Value="@_password"
+                HideDetails="true"
+                Placeholder="Password"
+                Clearable
+                Type="password">
+    </MTextField>
+
+    <MCheckbox @bind-Value="_agreed"
+               HideDetails="true">
+        <LabelContent>
+            <div>
+                I agree to the <a class="text-decoration-none" href="#">terms and conditions</a>
+            </div>
+        </LabelContent>
+    </MCheckbox>
+
+    <MButton Block
+             Rounded
+             Large
+             Color="primary"
+             Disabled="@LoginBtnDisabled"
+             OnClick="@RequestAuthentication"
+             Loading="@_loggingIn">
+        Login
+    </MButton>
+
+    <div class="d-flex justify-space-between">
+        <MButton Text
+                 Color="primary"
+                 Small
+                 Href="#"
+                 Class="text-capitalize">
+            Forgot password?
+        </MButton>
+        <MButton Text
+                 Color="primary"
+                 Small
+                 Href="#"
+                 Class="text-capitalize">
+            Log in via SMS
+        </MButton>
+    </div>
+</div>
+
+@code {
+
+    private string? _username;
+    private string? _password;
+    private bool _agreed;
+    private bool _loggingIn;
+    
+    [MemberNotNullWhen(false, nameof(_username), nameof(_password))]
+    private bool LoginBtnDisabled => string.IsNullOrWhiteSpace(_username) || string.IsNullOrWhiteSpace(_password) || !_agreed;
+
+    private async Task RequestAuthentication()
+    {
+        if (LoginBtnDisabled)
+        {
+            return;
+        }
+
+        _loggingIn = true;
+        StateHasChanged();
+
+        var authenticationState = await ((MauiDemoAuthenticationStateProvider)AuthenticationStateProvider).LoginAsync(_username, _password);
+        if (authenticationState.User.Identity?.IsAuthenticated is true)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        _loggingIn = false;
+    }
+
+}

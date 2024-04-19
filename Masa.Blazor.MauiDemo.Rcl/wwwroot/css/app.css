@@ -59,3 +59,11 @@
 .m-simple-checkbox.priority--low .m-icon{
   color: inherit;
 }
+
+.login {
+  text-align: center;
+}
+
+.login > * {
+  margin-bottom: 24px !important;
+}
