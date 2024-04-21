@@ -3,9 +3,11 @@
 
 <MApp>
     <MMain>
-        <MContainer>
-            @Body
-        </MContainer>
+        <PPageStack TabbedPatterns="@( ["/login$"])">
+            <MContainer>
+                @Body
+            </MContainer>
+        </PPageStack>
     </MMain>
 </MApp>
 

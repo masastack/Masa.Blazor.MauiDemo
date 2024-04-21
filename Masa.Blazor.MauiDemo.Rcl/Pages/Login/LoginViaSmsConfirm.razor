@@ -1,0 +1,42 @@
+﻿@page "/login-via-sms-confirm"
+@attribute [AllowAnonymous]
+@layout NoCachedLayout
+
+<PPageStackItemInit Title="Enter Confirmation Code"></PPageStackItemInit>
+
+<div class="login">
+    <div class="secondary--text body-1">
+        Enter 6-digit code sent to your phone number
+    </div>
+
+    <MTextField @bind-Value="@confirmCode"
+                Placeholder="Confirmation Code">
+        <PrependInnerContent>
+            <b>+86</b>
+        </PrependInnerContent>
+    </MTextField>
+
+    <MButton Block
+             Class="text-capitalize"
+             Rounded
+             Large
+             Color="primary"
+             Disabled="@LoginBtnDisabled"
+             Href="/login-via-sms-confirm">
+        Confirm
+    </MButton>
+
+    <div class="secondary--text body-2">
+        SMS will arrive within @seconds seconds
+    </div>
+
+</div>
+
+@code {
+
+    private string confirmCode;
+
+    private int seconds = 60;
+
+    private bool LoginBtnDisabled => string.IsNullOrEmpty(confirmCode);
+}

@@ -5,68 +5,91 @@
 @attribute [AllowAnonymous]
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IPopupService PopupService
 
-<div class="login">
-    <div class="text-right">
-        <MButton Text Class="text-capitalize">Sign Up</MButton>
+<div class="d-flex flex-column justify-space-between"
+     style="height: 100vh">
+    <div class="login">
+        <div class="text-right">
+            <MButton Text Class="text-capitalize">Sign Up</MButton>
+        </div>
+
+        <MAvatar Size="72"
+                 Color="white">
+            <MImage Src="_content/Masa.Blazor.MauiDemo.Rcl/img/masastack.png"
+                    Contain
+                    MaxWidth="64"
+                    alt="masastack">
+            </MImage>
+        </MAvatar>
+
+        <MTextField @bind-Value="@_username"
+                    HideDetails="true"
+                    Placeholder="Email or phone"
+                    Clearable>
+        </MTextField>
+
+        <MTextField @bind-Value="@_password"
+                    HideDetails="true"
+                    Placeholder="Password"
+                    Clearable
+                    Type="password"
+                    OnEnter="@LogIn">
+        </MTextField>
+
+        <MCheckbox @bind-Value="_agreed"
+                   HideDetails="true">
+            <LabelContent>
+                <div>
+                    I agree to the <a class="text-decoration-none" href="#">terms and conditions</a>
+                </div>
+            </LabelContent>
+        </MCheckbox>
+
+        <MButton Block
+                 Class="text-capitalize"
+                 Rounded
+                 Large
+                 Color="primary"
+                 Disabled="@LoginBtnDisabled"
+                 OnClick="@LogIn"
+                 Loading="@_loggingIn">
+            Login
+        </MButton>
+
+        <div class="d-flex justify-space-between">
+            <MButton Text
+                     Color="primary"
+                     Small
+                     Href="#"
+                     Class="text-capitalize">
+                Forgot password?
+            </MButton>
+            <MButton Text
+                     Color="primary"
+                     Small
+                     Href="/login-via-sms"
+                     Class="text-capitalize">
+                Log in via SMS
+            </MButton>
+        </div>
     </div>
 
-    <MAvatar Size="72"
-             Color="white">
-        <MImage Src="_content/Masa.Blazor.MauiDemo.Rcl/img/masastack.png"
-                Contain
-                MaxWidth="64"
-                alt="masastack">
-        </MImage>
-    </MAvatar>
+    <div class="mb-12">
+        <MDivider Center Class="mb-4">Or</MDivider>
 
-    <MTextField @bind-Value="@_username"
-                HideDetails="true"
-                Placeholder="Email or phone"
-                Clearable>
-    </MTextField>
-
-    <MTextField @bind-Value="@_password"
-                HideDetails="true"
-                Placeholder="Password"
-                Clearable
-                Type="password">
-    </MTextField>
-
-    <MCheckbox @bind-Value="_agreed"
-               HideDetails="true">
-        <LabelContent>
-            <div>
-                I agree to the <a class="text-decoration-none" href="#">terms and conditions</a>
-            </div>
-        </LabelContent>
-    </MCheckbox>
-
-    <MButton Block
-             Rounded
-             Large
-             Color="primary"
-             Disabled="@LoginBtnDisabled"
-             OnClick="@RequestAuthentication"
-             Loading="@_loggingIn">
-        Login
-    </MButton>
-
-    <div class="d-flex justify-space-between">
-        <MButton Text
-                 Color="primary"
-                 Small
-                 Href="#"
-                 Class="text-capitalize">
-            Forgot password?
-        </MButton>
-        <MButton Text
-                 Color="primary"
-                 Small
-                 Href="#"
-                 Class="text-capitalize">
-            Log in via SMS
-        </MButton>
+        <div class="d-flex justify-space-around mx-auto"
+             style="width: 70vw">
+            <MButton Icon XLarge OnClick="@(() => ThirdPartyLogIn("wechat"))">
+                <MIcon Large>$wechat</MIcon>
+            </MButton>
+            <MButton Icon XLarge OnClick="@(() => ThirdPartyLogIn("apple"))">
+                <MIcon Large>$apple</MIcon>
+            </MButton>
+            <MButton Icon XLarge OnClick="@(() => ThirdPartyLogIn("google"))">
+                <MIcon XLarge>$google</MIcon>
+            </MButton>
+        </div>
     </div>
 </div>
 
@@ -76,11 +99,11 @@
     private string? _password;
     private bool _agreed;
     private bool _loggingIn;
-    
+
     [MemberNotNullWhen(false, nameof(_username), nameof(_password))]
     private bool LoginBtnDisabled => string.IsNullOrWhiteSpace(_username) || string.IsNullOrWhiteSpace(_password) || !_agreed;
 
-    private async Task RequestAuthentication()
+    private async Task LogIn()
     {
         if (LoginBtnDisabled)
         {
@@ -97,6 +120,11 @@
         }
 
         _loggingIn = false;
+    }
+
+    private async Task ThirdPartyLogIn(string provider)
+    {
+        await PopupService.EnqueueSnackbarAsync("Not implemented.", AlertTypes.Warning);
     }
 
 }
