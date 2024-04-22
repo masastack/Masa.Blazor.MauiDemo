@@ -1,0 +1,112 @@
+﻿@using System.Diagnostics.CodeAnalysis
+@using System.Timers
+@implements IDisposable
+
+<PPageStackItemInit Title="@PageTitle"></PPageStackItemInit>
+
+<div class="login">
+    <h2 class="mt-12">Enter Confirmation Code</h2>
+    <div class="secondary--text body-2">
+        Enter 6-digit code sent to @PhoneNumber
+    </div>
+
+    <MOtpInput @bind-Value="_confirmCode"
+               Type="OtpInputType.Number"
+               AutoFocus
+               OnFinish="@ValidateCode">
+    </MOtpInput>
+
+    <div class="secondary--text body-2">
+        @if (_seconds == 0)
+        {
+            <MButton Text 
+                     Small
+                     Color="primary"
+                     Class="text-capitalize"
+                     OnClick="@SendSmsAsync">
+                Resend
+            </MButton>
+        }
+        else
+        {
+            <div>SMS will arrive within @_seconds seconds</div>
+        }
+    </div>
+
+</div>
+
+@code {
+
+    [Parameter] public string PhoneNumber { get; set; } = null!;
+
+    [Parameter] public string? PageTitle { get; set; }
+
+    [Parameter] public EventCallback<string> OnConfirm { get; set; }
+
+    private string? _confirmCode;
+    private int _seconds = 60;
+    private Timer? _timer;
+
+    [MemberNotNullWhen(false, nameof(_confirmCode))]
+    private bool LoginBtnDisabled => string.IsNullOrEmpty(_confirmCode);
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await SendSmsAsync();
+            StateHasChanged();
+        }
+    }
+
+    private async Task SendSmsAsync()
+    {
+        // simulate sending sms
+        await Task.Delay(100);
+
+        _seconds = 60;
+        if (_timer is null)
+        {
+            _timer = new(1000);
+            _timer.Elapsed += TimerOnElapsed;
+        }
+
+        _timer.Start();
+    }
+
+    private async Task ValidateCode()
+    {
+        if (LoginBtnDisabled)
+        {
+            return;
+        }
+
+        await OnConfirm.InvokeAsync(_confirmCode);
+    }
+
+    private void TimerOnElapsed(object? sender, ElapsedEventArgs e)
+    {
+        InvokeAsync(() =>
+        {
+            _seconds--;
+
+            if (_seconds == 0)
+            {
+                _timer!.Stop();
+            }
+
+            StateHasChanged();
+        });
+    }
+
+    public void Dispose()
+    {
+        if (_timer is not null)
+        {
+            _timer.Stop();
+            _timer.Elapsed -= TimerOnElapsed;
+            _timer.Dispose();
+        }
+    }
+
+}

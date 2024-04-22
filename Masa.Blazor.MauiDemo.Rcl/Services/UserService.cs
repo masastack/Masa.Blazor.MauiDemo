@@ -3,7 +3,7 @@ using System.Security.Claims;
 using BlazorComponent;
 using Masa.Blazor.MauiDemo.Platforms;
 
-namespace Masa.Blazor.MauiDemo.JwtAuth;
+namespace Masa.Blazor.MauiDemo.Rcl.Services;
 
 public class UserService
 {
@@ -48,6 +48,26 @@ public class UserService
         await _popupService.EnqueueSnackbarAsync("Login failed", "Invalid username or password", AlertTypes.Error);
 
         return new ClaimsPrincipal();
+    }
+
+    public async Task<ClaimsPrincipal> LoginBySmsAsync(string phoneNumber, string password)
+    {
+        // Simulate a login request
+        return await LoginAsync("test", "test");
+    }
+    
+    public async Task<bool> ValidateConfirmCodeAsync(string phoneNumber, string confirmCode)
+    {
+        // Simulate a validate confirm code request
+        await Task.Delay(1000);
+        return await Task.FromResult(true);
+    }
+
+    public async Task<bool> ResetPasswordAsync(string phoneNumber, string password, string confirmCode)
+    {
+        // Simulate a reset password request
+        await Task.Delay(1000);
+        return await Task.FromResult(true);
     }
 
     public async Task<ClaimsPrincipal?> GetAuthenticatedUserAsync()

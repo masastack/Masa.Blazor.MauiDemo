@@ -1,0 +1,91 @@
+﻿@using System.Text.RegularExpressions
+@inject NavigationManager NavigationManager
+
+<PPageStackItemInit Title="@PageTitle"></PPageStackItemInit>
+
+<MForm @ref="_form" Class="login">
+    <h2 class="my-12">Enter your phone number</h2>
+    <MTextField @bind-Value="@_phoneNumber"
+                Placeholder="Phone number"
+                HideDetails="@("auto")"
+                Rules="@_rules"
+                Autofocus
+                Type="number"
+                NumberProps="nb => nb.HideControl = true">
+        <PrependInnerContent>
+            <b style="margin-top: 3px; margin-right: 3px;">+86</b>
+        </PrependInnerContent>
+    </MTextField>
+
+    @if (RequireAgreeCheckbox)
+    {
+        <MCheckbox @bind-Value="_agreed"
+                   HideDetails="true">
+            <LabelContent>
+                <div>
+                    I agree to the
+                    <a class="text-decoration-none"
+                       href="/terms-and-conditions"
+                       @onclick:stopPropagation>
+                        terms and conditions
+                    </a>.
+                </div>
+            </LabelContent>
+        </MCheckbox>
+    }
+
+    <MButton Block
+             Class="text-capitalize"
+             Rounded
+             Large
+             Color="primary"
+             Disabled="@LoginBtnDisabled"
+             OnClick="@NavigateToNext">
+        Next
+    </MButton>
+</MForm>
+
+@code {
+
+    [Parameter] public string? PageTitle { get; set; }
+
+    [Parameter] public bool RequireAgreeCheckbox { get; set; }
+
+    /// <summary>
+    /// The uri prefix to navigate to after the user clicks the login button.
+    /// template: /{UriPrefixNavigateTo}/{PhoneNumber}
+    /// </summary>
+    [Parameter]
+    [EditorRequired]
+    public string UriPrefixNavigateTo { get; set; } = null!;
+
+    private static readonly Regex PhoneRegex = new(@"^1[3-9]\d{9}$");
+
+    private static readonly Func<string?, StringBoolean> PhoneRule = (value) =>
+    {
+        if (string.IsNullOrWhiteSpace(value) || PhoneRegex.IsMatch(value))
+        {
+            return true;
+        }
+
+        return "Invalid phone number";
+    };
+
+    private string? _phoneNumber;
+    private bool _agreed;
+    private MForm? _form;
+
+    private bool LoginBtnDisabled => string.IsNullOrEmpty(_phoneNumber) || (RequireAgreeCheckbox && !_agreed);
+
+    private Func<string, StringBoolean>[] _rules = [PhoneRule];
+
+    private void NavigateToNext()
+    {
+        if (_form?.Validate() is true)
+        {
+            var uri = UriPrefixNavigateTo.StartsWith('/') ? UriPrefixNavigateTo : "/" + UriPrefixNavigateTo;
+            NavigationManager.NavigateTo($"{uri}/{_phoneNumber}");
+        }
+    }
+
+}

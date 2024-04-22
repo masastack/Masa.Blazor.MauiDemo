@@ -1,12 +1,12 @@
-﻿@page "/login-via-sms-confirm/{phone}"
+﻿@page "/sign-up-confirm/{phone}"
 @attribute [AllowAnonymous]
 @layout NoCachedLayout
 @inject NavigationManager NavigationManager
-@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IPopupService PopupService
+@inject UserService UserService
 
 <Masa.Blazor.MauiDemo.Rcl.Pages.Login.Components.PhoneNumberConfirm
-    PageTitle="Login via SMS"
+    PageTitle="Sign Up"
     PhoneNumber="@Phone"
     OnConfirm="@HandleOnConfirm"/>
 
@@ -17,13 +17,17 @@
     private async Task HandleOnConfirm(string confirmCode)
     {
         PopupService.ShowProgressCircular();
-        StateHasChanged();
 
-        var authenticationState = await ((MauiDemoAuthenticationStateProvider)AuthenticationStateProvider).LoginViaSmsAsync(Phone, confirmCode);
+        var success = await UserService.ValidateConfirmCodeAsync(Phone, confirmCode);
         PopupService.HideProgressCircular();
-        if (authenticationState.User.Identity?.IsAuthenticated is true)
+
+        if (success)
         {
-            NavigationManager.NavigateTo("/");
+            NavigationManager.NavigateTo($"/reset-password/{Phone}/{confirmCode}?signUp=true");
+        }
+        else
+        {
+            await PopupService.EnqueueSnackbarAsync("Invalid confirmation code", AlertTypes.Error);
         }
     }
 

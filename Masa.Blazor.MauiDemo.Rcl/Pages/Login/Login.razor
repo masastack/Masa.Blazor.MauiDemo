@@ -1,17 +1,15 @@
 ﻿@page "/login"
 @using System.Diagnostics.CodeAnalysis
-@using Masa.Blazor.MauiDemo.JwtAuth
 @layout NoCachedLayout
 @attribute [AllowAnonymous]
 @inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IPopupService PopupService
 
-<div class="d-flex flex-column justify-space-between"
-     style="height: 100vh">
+<div class="d-flex flex-column justify-space-between fill-height">
     <div class="login">
         <div class="text-right">
-            <MButton Text Class="text-capitalize">Sign Up</MButton>
+            <MButton Text Class="text-capitalize" Href="/sign-up">Sign Up</MButton>
         </div>
 
         <MAvatar Size="72"
@@ -25,7 +23,7 @@
 
         <MTextField @bind-Value="@_username"
                     HideDetails="true"
-                    Placeholder="Email or phone"
+                    Placeholder="Username"
                     Clearable>
         </MTextField>
 
@@ -41,7 +39,12 @@
                    HideDetails="true">
             <LabelContent>
                 <div>
-                    I agree to the <a class="text-decoration-none" href="#">terms and conditions</a>
+                    I agree to the
+                    <a class="text-decoration-none"
+                       href="/terms-and-conditions"
+                       @onclick:stopPropagation>
+                        terms and conditions
+                    </a>.
                 </div>
             </LabelContent>
         </MCheckbox>
@@ -61,7 +64,7 @@
             <MButton Text
                      Color="primary"
                      Small
-                     Href="#"
+                     Href="/retrieve-password"
                      Class="text-capitalize">
                 Forgot password?
             </MButton>
@@ -69,7 +72,7 @@
                      Color="primary"
                      Small
                      Href="/login-via-sms"
-                     Class="text-capitalize">
+                     Class="text-none">
                 Log in via SMS
             </MButton>
         </div>

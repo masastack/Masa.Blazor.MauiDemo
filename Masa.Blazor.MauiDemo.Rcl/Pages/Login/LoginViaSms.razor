@@ -2,41 +2,7 @@
 @attribute [AllowAnonymous]
 @layout NoCachedLayout
 
-<PPageStackItemInit Title="Enter your phone number"></PPageStackItemInit>
-
-<div class="login">
-    <MTextField @bind-Value="@phoneNumber"
-                Placeholder="Phone number">
-        <PrependInnerContent>
-            <b>+86</b>
-        </PrependInnerContent>
-    </MTextField>
-
-    <MCheckbox @bind-Value="_agreed"
-               HideDetails="true">
-        <LabelContent>
-            <div>
-                I agree to the <a class="text-decoration-none" href="#">terms and conditions</a>
-            </div>
-        </LabelContent>
-    </MCheckbox>
-
-    <MButton Block
-             Class="text-capitalize"
-             Rounded
-             Large
-             Color="primary"
-             Disabled="@LoginBtnDisabled"
-             Href="/login-via-sms-confirm">
-        Confirm
-    </MButton>
-</div>
-
-@code {
-
-    private string phoneNumber;
-
-    private bool _agreed;
-
-    private bool LoginBtnDisabled => string.IsNullOrEmpty(phoneNumber) || !_agreed;
-}
+<Masa.Blazor.MauiDemo.Rcl.Pages.Login.Components.PhoneNumberInput
+    PageTitle="Login via SMS"
+    UriPrefixNavigateTo="/login-via-sms-confirm"
+    RequireAgreeCheckbox/>

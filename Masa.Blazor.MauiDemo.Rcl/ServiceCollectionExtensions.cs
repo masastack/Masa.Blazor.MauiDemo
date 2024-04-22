@@ -1,6 +1,9 @@
 ﻿using BlazorComponent;
 using Masa.Blazor;
+using Masa.Blazor.MauiDemo.Rcl.Auth;
+using Masa.Blazor.MauiDemo.Rcl.Services;
 using Masa.Blazor.Presets;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Microsoft.Extensions.DependencyInjection;
 
@@ -54,6 +57,7 @@ public static class ServiceCollectionExtensions
                 theme.Themes.Light.Secondary = "#5e5c71";
                 // theme.Themes.Light.Accent = "#006C4F";
                 theme.Themes.Light.Error = "#BA1A1A";
+                theme.Themes.Light.Surface = "#f0f3fa";
                 theme.Themes.Light.OnSurface = "#1C1B1F";
                 theme.Themes.Light.InverseSurface = "#131316";
                 theme.Themes.Light.InverseOnSurface = "#C9C5CA";
@@ -83,7 +87,12 @@ public static class ServiceCollectionExtensions
             });
         }, masaBlazorServiceLifetime);
 
-        services.AddJwtAuthentication();
+        services.AddScoped<UserService>();
+        services.AddScoped<MauiDemoAuthenticationStateProvider>();
+        services.AddScoped<AuthenticationStateProvider>(provider =>
+            provider.GetRequiredService<MauiDemoAuthenticationStateProvider>());
+        services.AddAuthorizationCore();
+        services.AddCascadingAuthenticationState();
 
         return services;
     }
