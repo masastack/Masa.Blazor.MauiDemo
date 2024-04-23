@@ -4,6 +4,7 @@
 @inject IPopupService PopupService
 @inject ProductService ProductService
 @inherits PStackPageBase
+@inject StackNavigationManager NavigationManager
 
 <PPageStackItemInit BarColor="surface"
                     RerenderKey="@_searchKey">
@@ -41,7 +42,7 @@
 @if (_products != null)
 {
     <div class="px-3">
-        @Shop.RenderProductList(_products)
+        @Shop.RenderProductList(this, _products, NavigationManager.NavigateTo)
 
         @if (_products.Count >= FirstLoadPageSize)
         {

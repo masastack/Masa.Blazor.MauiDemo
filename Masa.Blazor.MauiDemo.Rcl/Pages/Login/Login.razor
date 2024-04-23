@@ -1,16 +1,16 @@
 ﻿@page "/login"
 @using System.Diagnostics.CodeAnalysis
+@using Masa.Blazor.Presets.PageStack
 @layout LoginLayout
 @attribute [AllowAnonymous]
-@inject NavigationManager NavigationManager
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IPopupService PopupService
+@inject StackNavigationManager NavigationManager
 
 <div class="d-flex flex-column justify-space-between fill-height">
     <div class="login">
-        <MButton Href="/test1">Test</MButton>
         <div class="text-right">
-            <MButton Text Class="text-capitalize" Href="/sign-up">Sign Up</MButton>
+            <MButton Text Class="text-capitalize" OnClick="@(() => NavigationManager.NavigateTo("/sign-up"))">Sign Up</MButton>
         </div>
 
         <MAvatar Size="72"
@@ -41,11 +41,14 @@
             <LabelContent>
                 <div>
                     I agree to the
-                    <a class="text-decoration-none"
-                       href="/terms-and-conditions"
+                    <a @onclick="@(() => NavigationManager.NavigateTo("/terms-and-conditions"))"
                        @onclick:stopPropagation>
                         terms and conditions
                     </a>.
+                    <a href="/terms-and-conditions"
+                       @onclick:stopPropagation>
+                        [terms and conditions]
+                    </a>
                 </div>
             </LabelContent>
         </MCheckbox>
@@ -65,14 +68,14 @@
             <MButton Text
                      Color="primary"
                      Small
-                     Href="/retrieve-password"
+                     OnClick="@(() => NavigationManager.NavigateTo("/retrieve-password"))"
                      Class="text-capitalize">
                 Forgot password?
             </MButton>
             <MButton Text
                      Color="primary"
                      Small
-                     Href="/login-via-sms"
+                     OnClick="@(() => NavigationManager.NavigateTo("/login-via-sms"))"
                      Class="text-none">
                 Log in via SMS
             </MButton>

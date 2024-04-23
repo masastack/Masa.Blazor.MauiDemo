@@ -1,5 +1,6 @@
 ﻿@page "/settings"
 @inject AuthenticationStateProvider AuthenticationStateProvider
+@inject StackNavigationManager NavigationManager
 
 <PageTitle>Settings</PageTitle>
 
@@ -8,7 +9,7 @@
 
 <div class="pa-4">
     <MList Class="rounded mb-3">
-        <MListItem Href="/settings/dark-mode">
+        <MListItem OnClick="@(() => NavigationManager.NavigateTo("/settings/dark-mode"))">
             <MListItemContent>
                 <MListItemTitle>Dark mode</MListItemTitle>
             </MListItemContent>
@@ -18,7 +19,7 @@
         </MListItem>
     </MList>
     <MList Class="rounded mb-3">
-        <MListItem Href="/settings/about-us">
+        <MListItem OnClick="@(() => NavigationManager.NavigateTo("/settings/about-us"))">
             <MListItemContent>
                 <MListItemTitle>About us</MListItemTitle>
             </MListItemContent>

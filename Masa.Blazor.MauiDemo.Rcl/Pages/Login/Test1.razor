@@ -2,11 +2,13 @@
 @page "/test1/{id}"
 @layout LoginLayout
 @attribute [AllowAnonymous]
+@using Masa.Blazor.Presets.PageStack
 @inherits PStackPageBase
+@inject StackNavigationManager StackNavigationManager
 
 <h1>Id: @Id</h1>
 
-<a href="/test2">/test2</a>
+<a @onclick="@(() => StackNavigationManager.Push("/test2"))">/test2</a>
 
 @code {
     [Parameter] public string Id { get; set; }

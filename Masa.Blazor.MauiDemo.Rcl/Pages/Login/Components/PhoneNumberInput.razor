@@ -1,5 +1,5 @@
 ﻿@using System.Text.RegularExpressions
-@inject NavigationManager NavigationManager
+@inject StackNavigationManager NavigationManager
 
 <PPageStackItemInit Title="@PageTitle"></PPageStackItemInit>
 
@@ -24,8 +24,7 @@
             <LabelContent>
                 <div>
                     I agree to the
-                    <a class="text-decoration-none"
-                       href="/terms-and-conditions"
+                    <a @onclick="@(() => NavigationManager.NavigateTo("/terms-and-conditions"))"
                        @onclick:stopPropagation>
                         terms and conditions
                     </a>.
