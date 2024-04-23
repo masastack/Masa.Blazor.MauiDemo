@@ -1,0 +1,27 @@
+﻿@page "/test1"
+@page "/test1/{id}"
+@layout LoginLayout
+@attribute [AllowAnonymous]
+@inherits PStackPageBase
+
+<h1>Id: @Id</h1>
+
+<a href="/test2">/test2</a>
+
+@code {
+    [Parameter] public string Id { get; set; }
+
+    // protected override async Task OnPageActivatedAsync()
+    // {
+    //     await base.OnPageActivatedAsync();
+    //
+    //     // await Task.Delay(1000);
+    //     
+    //     Console.Out.WriteLine($"[Test1] OnPageActivatedAsync {Id}");
+    //
+    //     await InvokeAsync(StateHasChanged);
+    //     
+    //     Console.Out.WriteLine($"[Test1] OnPageActivatedAsync  2{Id}");
+    // }
+
+}
