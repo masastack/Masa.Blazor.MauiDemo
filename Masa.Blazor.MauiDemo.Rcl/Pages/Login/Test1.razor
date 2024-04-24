@@ -5,27 +5,32 @@
 @inherits PStackPageBase
 @inject StackNavigationManager StackNavigationManager
 
-<h1>Id: @Id</h1>
+<h1>Id: @Id, Id2: @Id2</h1>
 
 <a href="/test2"
    data-page-stack-strategy="push">
     /test2
 </a>
 
-<a href="/test1/123qwe"
-   @onclick:preventDefault
-   data-page-stack-strategy="replace">
+<a @onclick="@(() => StackNavigationManager.Replace("/test1/123qwe"))">
     /test1/123qwe
 </a>
 
 @code {
     [Parameter] public string Id { get; set; }
+    
+    private string Id2 { get; set; }
 
     protected override void OnPageActivated(object? state)
     {
         base.OnPageActivated(state);
 
         Console.Out.WriteLine($"[Test1] OnPageActivated {state}");
+
+        if (state is string id)
+        {
+            Id2 = id;
+        }
     }
 
 }

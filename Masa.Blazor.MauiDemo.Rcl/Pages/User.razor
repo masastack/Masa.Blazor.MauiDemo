@@ -16,7 +16,11 @@
         </MAvatar>
         <span class="subtitle-1 px-2">MASA Team</span>
         <MSpacer/>
-        <MButton Icon Href="/settings" Light="@(MasaBlazor.Theme.Dark)" Dark="@(!MasaBlazor.Theme.Dark)">
+        <MButton Icon 
+                 Href="/settings"
+                 data-page-stack-strategy="push"
+                 Light="@(MasaBlazor.Theme.Dark)"
+                 Dark="@(!MasaBlazor.Theme.Dark)">
             <MIcon>mdi-cog-outline</MIcon>
         </MButton>
     </ChildContent>
