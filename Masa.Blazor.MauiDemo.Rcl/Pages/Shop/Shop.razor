@@ -24,7 +24,8 @@
                      Depressed
                      Height="40"
                      Class="text-capitalize rounded-l-0"
-                     OnClick="@(() => NavigationManager.NavigateTo($"/shop/search?key={_pinnedSearch}"))"
+                     Href="@($"/shop/search?key={_pinnedSearch}")"
+                     data-page-stack-strategy="push"
                      OnClickStopPropagation>
                 Search
             </MButton>
@@ -32,7 +33,7 @@
     </MAppBar>
 
     <div style="margin-top: 56px;">
-        @RenderProductList(this, _products, NavigationManager.NavigateTo)
+        @RenderProductList(_products)
     </div>
 
     <MInfiniteScroll Parent="@("window")"
@@ -42,53 +43,39 @@
 
 @code
 {
-    private static RenderFragment ProductCard(IComponent component, RenderFragment childContent, Action navigateTo)
-    {
-        return builder =>
-        {
-            builder.OpenComponent<MCard>(0);
-            builder.AddAttribute(1, "Class", "pa-2");
-            builder.AddAttribute(2, "Flat", true);
-            builder.AddAttribute(2, "OnClick", EventCallback.Factory.Create<MouseEventArgs>(component, (e) => navigateTo()));
-            builder.AddAttribute(3, "ChildContent", childContent);
-            builder.CloseComponent();
-        };
-    }
-
-    // https://github.com/dotnet/aspnetcore/issues/39298
-    internal static RenderFragment RenderProductList(IComponent component, List<Product> products, Action<string> navigateTo) => __builder =>
+    internal static RenderFragment RenderProductList(List<Product> products) => __builder =>
     {
         <MRow Dense>
             @foreach (var item in products)
             {
                 <MCol Cols="6">
-                    @ProductCard(component, ChildContent(item), () => navigateTo($"/shop/product/{item.Id}"))
+                    <MCard Flat
+                           Class="pa-2"
+                           Href="@($"/shop/product/{item.Id}")"
+                           data-page-stack-strategy="push">
+                        <MImage Src="@($"_content/Masa.Blazor.MauiDemo.Rcl/{item.PictureFile}")"
+                                Height="150"
+                                Contain>
+                        </MImage>
+                        <div class="subtitle-2 d-flex align-center">
+                            <MChip Label Color="black" Dark XSmall Class="mr-1 px-2"
+                                   Style="min-width: min-content;">
+                                NEW
+                            </MChip>
+                            <div class="text-truncate">
+                                @item.Name
+                            </div>
+                        </div>
+                        <div class="caption d-flex align-center">
+                            <MIcon Color="red" XSmall>mdi-currency-usd</MIcon>
+                            <span class="red--text" style="line-height: 1rem;">
+                                @item.Price
+                            </span>
+                        </div>
+                    </MCard>
                 </MCol>
             }
         </MRow>
-        
-        RenderFragment ChildContent(Product item) => __builder =>
-        {
-            <MImage Src="@($"_content/Masa.Blazor.MauiDemo.Rcl/{item.PictureFile}")"
-                    Height="150"
-                    Contain>
-            </MImage>
-            <div class="subtitle-2 d-flex align-center">
-                <MChip Label Color="black" Dark XSmall Class="mr-1 px-2"
-                       Style="min-width: min-content;">
-                    NEW
-                </MChip>
-                <div class="text-truncate">
-                    @item.Name
-                </div>
-            </div>
-            <div class="caption d-flex align-center">
-                <MIcon Color="red" XSmall>mdi-currency-usd</MIcon>
-                <span class="red--text" style="line-height: 1rem;">
-                    @item.Price
-                </span>
-            </div>
-        };
     };
 
     private int _page = 1;

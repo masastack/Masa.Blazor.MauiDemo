@@ -2,28 +2,30 @@
 @page "/test1/{id}"
 @layout LoginLayout
 @attribute [AllowAnonymous]
-@using Masa.Blazor.Presets.PageStack
 @inherits PStackPageBase
 @inject StackNavigationManager StackNavigationManager
 
 <h1>Id: @Id</h1>
 
-<a @onclick="@(() => StackNavigationManager.Push("/test2"))">/test2</a>
+<a href="/test2"
+   data-page-stack-strategy="push">
+    /test2
+</a>
+
+<a href="/test1/123qwe"
+   @onclick:preventDefault
+   data-page-stack-strategy="replace">
+    /test1/123qwe
+</a>
 
 @code {
     [Parameter] public string Id { get; set; }
 
-    // protected override async Task OnPageActivatedAsync()
-    // {
-    //     await base.OnPageActivatedAsync();
-    //
-    //     // await Task.Delay(1000);
-    //     
-    //     Console.Out.WriteLine($"[Test1] OnPageActivatedAsync {Id}");
-    //
-    //     await InvokeAsync(StateHasChanged);
-    //     
-    //     Console.Out.WriteLine($"[Test1] OnPageActivatedAsync  2{Id}");
-    // }
+    protected override void OnPageActivated(object? state)
+    {
+        base.OnPageActivated(state);
+
+        Console.Out.WriteLine($"[Test1] OnPageActivated {state}");
+    }
 
 }

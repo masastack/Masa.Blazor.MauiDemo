@@ -24,7 +24,8 @@
             <LabelContent>
                 <div>
                     I agree to the
-                    <a @onclick="@(() => NavigationManager.NavigateTo("/terms-and-conditions"))"
+                    <a href="/terms-and-conditions"
+                       data-page-stack-strategy
                        @onclick:stopPropagation>
                         terms and conditions
                     </a>.

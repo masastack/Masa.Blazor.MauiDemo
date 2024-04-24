@@ -2,8 +2,22 @@
 @layout LoginLayout
 @attribute [AllowAnonymous]
 @inherits PStackPageBase
+@inject StackNavigationManager NavigationManager
 
 <ul>
-    <li><a href='/test1/abc'>/test1/abc</a></li>
-    <li><a href='/test1/xyz'>/test1/xyz</a></li>
+    <li>
+        <MButton OnClick="@(() => GoBack("abc"))">Goback with data abc</MButton>
+    </li>
+    <li>
+        <MButton OnClick="@(() => GoBack("xyz"))">Goback with data xyz</MButton>
+    </li>
 </ul>
+
+@code {
+
+    private void GoBack(string data)
+    {
+        NavigationManager.Back(data);
+    }
+
+}

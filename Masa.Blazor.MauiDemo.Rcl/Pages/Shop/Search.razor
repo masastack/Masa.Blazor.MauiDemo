@@ -42,7 +42,7 @@
 @if (_products != null)
 {
     <div class="px-3">
-        @Shop.RenderProductList(this, _products, NavigationManager.NavigateTo)
+        @Shop.RenderProductList(_products)
 
         @if (_products.Count >= FirstLoadPageSize)
         {
