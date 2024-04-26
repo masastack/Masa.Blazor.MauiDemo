@@ -1,6 +1,6 @@
 ﻿@page "/"
 @inject ProductService ProductService
-@inject StackNavigationManager NavigationManager
+@inject PageStackNavController NavController
 
 <PageTitle>Shop</PageTitle>
 
@@ -52,7 +52,7 @@
                     <MCard Flat
                            Class="pa-2"
                            Href="@($"/shop/product/{item.Id}")"
-                           data-page-stack-strategy="push">
+                           data-page-stack-strategy>
                         <MImage Src="@($"_content/Masa.Blazor.MauiDemo.Rcl/{item.PictureFile}")"
                                 Height="150"
                                 Contain>
@@ -100,6 +100,6 @@
 
     private void HandleOnTextFieldClick()
     {
-        NavigationManager.NavigateTo($"/shop/search?placeholder={_pinnedSearch}");
+        NavController.Push($"/shop/search?placeholder={_pinnedSearch}");
     }
 }

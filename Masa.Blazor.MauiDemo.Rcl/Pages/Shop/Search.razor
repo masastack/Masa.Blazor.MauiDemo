@@ -1,12 +1,9 @@
 ﻿@page "/shop/search"
-@using Masa.Blazor.MauiDemo.Rcl.Models
-@using Masa.Blazor.MauiDemo.Rcl.Services
 @inject IPopupService PopupService
 @inject ProductService ProductService
 @inherits PStackPageBase
-@inject StackNavigationManager NavigationManager
 
-<PPageStackItemInit BarColor="surface"
+<PStackPageBarInit Color="surface"
                     RerenderKey="@_searchKey">
     <BarContent>
         <MButton Icon OnClick="@context.GoBack">
@@ -37,7 +34,7 @@
             Search
         </MButton>
     </BarContent>
-</PPageStackItemInit>
+</PStackPageBarInit>
 
 @if (_products != null)
 {

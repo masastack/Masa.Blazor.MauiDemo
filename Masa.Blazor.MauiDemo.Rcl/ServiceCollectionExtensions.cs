@@ -49,6 +49,10 @@ public static class ServiceCollectionExtensions
                 {
                     { nameof(PEnqueuedSnackbars.Closeable), true },
                     { nameof(PEnqueuedSnackbars.Text), true }
+                },
+                ["PStackPageBarInit"] = new Dictionary<string, object?>()
+                {
+                    { nameof(PStackPageBarInit.CenterTitle), true }
                 }
             };
             options.ConfigureTheme(theme =>

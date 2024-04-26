@@ -1,7 +1,7 @@
 ﻿@page "/sign-up-confirm/{phone}"
 @attribute [AllowAnonymous]
 @layout LoginLayout
-@inject NavigationManager NavigationManager
+@inject PageStackNavController NavController
 @inject IPopupService PopupService
 @inject UserService UserService
 
@@ -23,7 +23,7 @@
 
         if (success)
         {
-            NavigationManager.NavigateTo($"/reset-password/{Phone}/{confirmCode}?signUp=true");
+            NavController.Push($"/reset-password/{Phone}/{confirmCode}?signUp=true");
         }
         else
         {

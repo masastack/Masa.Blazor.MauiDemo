@@ -1,17 +1,14 @@
 ﻿@page "/login"
 @using System.Diagnostics.CodeAnalysis
-@using Masa.Blazor.Presets.PageStack
 @layout LoginLayout
 @attribute [AllowAnonymous]
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IPopupService PopupService
-@inject StackNavigationManager NavigationManager
+@inject NavigationManager NavigationManager
 
 <div class="d-flex flex-column justify-space-between fill-height">
     <div class="login">
         <div class="text-right">
-            <MButton Href="/test1">Test1</MButton>
-            <MButton Href="/test1" data-page-stack-strategy>Test1</MButton>
             <MButton Text Class="text-capitalize" Href="/sign-up" data-page-stack-strategy>Sign Up</MButton>
         </div>
 
@@ -44,7 +41,7 @@
                 <div>
                     I agree to the
                     <a href="/terms-and-conditions"
-                       data-page-stack-strategy="push"
+                       data-page-stack-strategy
                        @onclick:stopPropagation>
                         terms and conditions
                     </a>.

@@ -1,7 +1,7 @@
 ﻿@using System.Text.RegularExpressions
-@inject StackNavigationManager NavigationManager
+@inject PageStackNavController NavController
 
-<PPageStackItemInit Title="@PageTitle"></PPageStackItemInit>
+<PStackPageBarInit Title="@PageTitle"></PStackPageBarInit>
 
 <MForm @ref="_form" Class="login">
     <h2 class="my-12">Enter your phone number</h2>
@@ -84,7 +84,7 @@
         if (_form?.Validate() is true)
         {
             var uri = UriPrefixNavigateTo.StartsWith('/') ? UriPrefixNavigateTo : "/" + UriPrefixNavigateTo;
-            NavigationManager.NavigateTo($"{uri}/{_phoneNumber}");
+            NavController.Push($"{uri}/{_phoneNumber}");
         }
     }
 

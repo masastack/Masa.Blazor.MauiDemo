@@ -1,36 +1,27 @@
 ﻿@page "/test1"
-@page "/test1/{id}"
+@using System.Web
 @layout LoginLayout
 @attribute [AllowAnonymous]
-@inherits PStackPageBase
-@inject StackNavigationManager StackNavigationManager
+@inject PageStackNavController NavController
+@inject IPopupService PopupService
 
-<h1>Id: @Id, Id2: @Id2</h1>
+<PStackPageBarInit Title="Test 1"
+                   Height="44">
+    <ExtensionContent>
+        ABC
+    </ExtensionContent>
+</PStackPageBarInit>
+<button @onclick="@(() => PopupService.ConfirmAsync("Title"))">confirm</button>
 
-<a href="/test2"
-   data-page-stack-strategy="push">
-    /test2
-</a>
+<ul style="height: 100vh;">
+    <li>
+        <a @onclick="@(() => NavController.Replace("/test1"))">/test1</a>
+    </li>
+    <li>
+        <a @onclick="@(() => NavController.Replace("/test1/abc"))">/test1/abc</a>
+    </li>
+    <li>
+        <a @onclick=@(() => NavController.Replace($"/test1/message/{HttpUtility.UrlEncode  ("中文")}"))>/test1/message/123</a>
+    </li>
 
-<a @onclick="@(() => StackNavigationManager.Replace("/test1/123qwe"))">
-    /test1/123qwe
-</a>
-
-@code {
-    [Parameter] public string Id { get; set; }
-    
-    private string Id2 { get; set; }
-
-    protected override void OnPageActivated(object? state)
-    {
-        base.OnPageActivated(state);
-
-        Console.Out.WriteLine($"[Test1] OnPageActivated {state}");
-
-        if (state is string id)
-        {
-            Id2 = id;
-        }
-    }
-
-}
+</ul>
