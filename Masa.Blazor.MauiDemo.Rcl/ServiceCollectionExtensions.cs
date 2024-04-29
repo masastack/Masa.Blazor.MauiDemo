@@ -52,7 +52,8 @@ public static class ServiceCollectionExtensions
                 },
                 ["PStackPageBarInit"] = new Dictionary<string, object?>()
                 {
-                    { nameof(PStackPageBarInit.CenterTitle), true }
+                    { nameof(PStackPageBarInit.CenterTitle), true },
+                    { nameof(PStackPageBarInit.Flat), true }
                 }
             };
             options.ConfigureTheme(theme =>

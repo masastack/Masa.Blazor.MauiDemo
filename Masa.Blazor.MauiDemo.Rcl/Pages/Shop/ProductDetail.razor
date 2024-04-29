@@ -4,6 +4,7 @@
 @inject IPlatformIntegration PlatformIntegration
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@inject PageStackNavController NavController
 @inject IPopupService PopupService
 @inherits PStackPageBase
 
@@ -11,8 +12,8 @@
 
 <PStackPageBarInit>
     <ActionContent>
-        <MButton Icon Href="/">
-            <MIcon>mdi-home-outline</MIcon>
+        <MButton IconName="mdi-home-outline"
+                 OnClick="@(() => NavController.Clear())">
         </MButton>
         <MBottomSheet>
             <ActivatorContent>

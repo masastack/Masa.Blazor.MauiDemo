@@ -5,6 +5,7 @@
 @inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IPopupService PopupService
 @inject NavigationManager NavigationManager
+@inject PageStackNavController NavController
 
 <div class="d-flex flex-column justify-space-between fill-height">
     <div class="login">
@@ -23,13 +24,13 @@
 
         <MTextField @bind-Value="@_username"
                     HideDetails="true"
-                    Placeholder="Username"
+                    Placeholder="Username (test)"
                     Clearable>
         </MTextField>
 
         <MTextField @bind-Value="@_password"
                     HideDetails="true"
-                    Placeholder="Password"
+                    Placeholder="Password (test)"
                     Clearable
                     Type="password"
                     OnEnter="@LogIn">
@@ -72,8 +73,7 @@
             <MButton Text
                      Color="primary"
                      Small
-                     Href="/login-via-sms"
-                     data-page-stack-strategy
+                     OnClick="@(() => NavController.Push("/login-via-sms"))"
                      Class="text-none">
                 Log in via SMS
             </MButton>
