@@ -12,10 +12,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Masa.Blazor.MauiDemo.Web", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Blazor.MauiDemo.Platforms", "Masa.Blazor.MauiDemo.Platforms\Masa.Blazor.MauiDemo.Platforms.csproj", "{5DBF9044-26FD-4CF2-BE30-67B0D24952F5}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Blazor", "..\MASA.Blazor\src\Masa.Blazor\Masa.Blazor.csproj", "{43BEF694-C970-4085-978C-3F987E7ADDEF}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Masa.Blazor.MauiDemo.Wasm", "Masa.Blazor.MauiDemo.Wasm\Masa.Blazor.MauiDemo.Wasm.csproj", "{30BFD8FF-FDD7-49D6-B7BB-F216A52962FE}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,14 +35,6 @@ Global
 		{5DBF9044-26FD-4CF2-BE30-67B0D24952F5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5DBF9044-26FD-4CF2-BE30-67B0D24952F5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5DBF9044-26FD-4CF2-BE30-67B0D24952F5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{43BEF694-C970-4085-978C-3F987E7ADDEF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{43BEF694-C970-4085-978C-3F987E7ADDEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{43BEF694-C970-4085-978C-3F987E7ADDEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{43BEF694-C970-4085-978C-3F987E7ADDEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30BFD8FF-FDD7-49D6-B7BB-F216A52962FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30BFD8FF-FDD7-49D6-B7BB-F216A52962FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30BFD8FF-FDD7-49D6-B7BB-F216A52962FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30BFD8FF-FDD7-49D6-B7BB-F216A52962FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -54,7 +42,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{8F51EA0C-8286-4EE7-BA59-10931DDDD62A} = {96192A86-CF0F-410F-8C80-24529716AD77}
 		{361DB9DC-156E-4E90-ADDA-B6E5717AB3EA} = {96192A86-CF0F-410F-8C80-24529716AD77}
-		{30BFD8FF-FDD7-49D6-B7BB-F216A52962FE} = {96192A86-CF0F-410F-8C80-24529716AD77}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {0E88533A-87A9-48F8-834B-D02820BC0C6E}
