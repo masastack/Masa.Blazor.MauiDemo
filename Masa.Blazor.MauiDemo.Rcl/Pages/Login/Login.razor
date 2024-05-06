@@ -1,0 +1,135 @@
+﻿@page "/login"
+@using System.Diagnostics.CodeAnalysis
+@layout LoginLayout
+@attribute [AllowAnonymous]
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IPopupService PopupService
+@inject NavigationManager NavigationManager
+@inject PageStackNavController NavController
+
+<div class="d-flex flex-column justify-space-between fill-height">
+    <div class="login">
+        <div class="text-right">
+            <MButton Text Class="text-capitalize" Href="/sign-up" data-page-stack-strategy>Sign Up</MButton>
+        </div>
+
+        <MAvatar Size="72"
+                 Color="white">
+            <MImage Src="_content/Masa.Blazor.MauiDemo.Rcl/img/masastack.png"
+                    Contain
+                    MaxWidth="64"
+                    alt="masastack">
+            </MImage>
+        </MAvatar>
+
+        <MTextField @bind-Value="@_username"
+                    HideDetails="true"
+                    Placeholder="Username (test)"
+                    Clearable>
+        </MTextField>
+
+        <MTextField @bind-Value="@_password"
+                    HideDetails="true"
+                    Placeholder="Password (test)"
+                    Clearable
+                    Type="password"
+                    OnEnter="@LogIn">
+        </MTextField>
+
+        <MCheckbox @bind-Value="_agreed"
+                   HideDetails="true">
+            <LabelContent>
+                <div>
+                    I agree to the
+                    <a href="/terms-and-conditions"
+                       data-page-stack-strategy
+                       @onclick:stopPropagation>
+                        terms and conditions
+                    </a>.
+                </div>
+            </LabelContent>
+        </MCheckbox>
+
+        <MButton Block
+                 Class="text-capitalize"
+                 Rounded
+                 Large
+                 Color="primary"
+                 Disabled="@LoginBtnDisabled"
+                 OnClick="@LogIn"
+                 Loading="@_loggingIn">
+            Login
+        </MButton>
+
+        <div class="d-flex justify-space-between">
+            <MButton Text
+                     Color="primary"
+                     Small
+                     Href="/retrieve-password"
+                     data-page-stack-strategy
+                     Class="text-capitalize">
+                Forgot password?
+            </MButton>
+            <MButton Text
+                     Color="primary"
+                     Small
+                     OnClick="@(() => NavController.Push("/login-via-sms"))"
+                     Class="text-none">
+                Log in via SMS
+            </MButton>
+        </div>
+    </div>
+
+    <div class="mb-12">
+        <MDivider Center Class="mb-4">Or</MDivider>
+
+        <div class="d-flex justify-space-around mx-auto"
+             style="width: 70vw">
+            <MButton Icon XLarge OnClick="@(() => ThirdPartyLogIn("wechat"))">
+                <MIcon Large>$wechat</MIcon>
+            </MButton>
+            <MButton Icon XLarge OnClick="@(() => ThirdPartyLogIn("apple"))">
+                <MIcon Large>$apple</MIcon>
+            </MButton>
+            <MButton Icon XLarge OnClick="@(() => ThirdPartyLogIn("google"))">
+                <MIcon XLarge>$google</MIcon>
+            </MButton>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private string? _username;
+    private string? _password;
+    private bool _agreed;
+    private bool _loggingIn;
+
+    [MemberNotNullWhen(false, nameof(_username), nameof(_password))]
+    private bool LoginBtnDisabled => string.IsNullOrWhiteSpace(_username) || string.IsNullOrWhiteSpace(_password) || !_agreed;
+
+    private async Task LogIn()
+    {
+        if (LoginBtnDisabled)
+        {
+            return;
+        }
+
+        _loggingIn = true;
+        StateHasChanged();
+
+        var authenticationState = await ((MauiDemoAuthenticationStateProvider)AuthenticationStateProvider).LoginAsync(_username, _password);
+        if (authenticationState.User.Identity?.IsAuthenticated is true)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+
+        _loggingIn = false;
+    }
+
+    private async Task ThirdPartyLogIn(string provider)
+    {
+        await PopupService.EnqueueSnackbarAsync("Not implemented.", AlertTypes.Warning);
+    }
+
+}

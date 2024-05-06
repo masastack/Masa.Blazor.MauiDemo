@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Core;
 using Masa.Blazor.MauiDemo.Platforms;
+using System.Text.Json;
 
 namespace Masa.Blazor.MauiDemo;
 
@@ -97,7 +98,9 @@ public class MauiPlatformIntegration : IPlatformIntegration
     public Task InitThemeAsync()
     {
         var result = Preferences.Default.Get<int>(AppThemeKey, -1);
-        var isDark = result < 1 ? Microsoft.Maui.Controls.Application.Current.RequestedTheme == AppTheme.Dark : result == 2;
+        var isDark = result < 1
+            ? Microsoft.Maui.Controls.Application.Current.RequestedTheme == AppTheme.Dark
+            : result == 2;
         _masaBlazor.SetTheme(isDark);
         return Task.CompletedTask;
     }
@@ -105,12 +108,53 @@ public class MauiPlatformIntegration : IPlatformIntegration
     public ValueTask<int> GetThemeAsync()
     {
         var result = Preferences.Default.Get<int>(AppThemeKey, -1);
-        return new ValueTask<int>(result == -1 ? (int)Microsoft.Maui.Controls.Application.Current.RequestedTheme : result);
+        return new ValueTask<int>(result == -1
+            ? (int)Microsoft.Maui.Controls.Application.Current.RequestedTheme
+            : result);
     }
 
     public ValueTask<bool> IsDarkThemeOfSystemAsync()
     {
         return ValueTask.FromResult(Microsoft.Maui.Controls.Application.Current.RequestedTheme == AppTheme.Dark);
+    }
+
+    public Task SetCacheAsync<TValue>(string key, TValue value)
+    {
+        var type = typeof(TValue);
+        if (type != typeof(string) && type.IsClass)
+        {
+            var jsonValue = JsonSerializer.Serialize(value);
+            Preferences.Default.Set(key, jsonValue);
+        }
+        else
+        { 
+            Preferences.Default.Set(key, value);
+        }
+
+        return Task.CompletedTask;
+    }
+
+    public Task<TValue> GetCacheAsync<TValue>(string key, TValue defaultValue)
+    {
+        var type = typeof(TValue);
+        if (type != typeof(string) && type.IsClass)
+        {
+            var jsonValue = Preferences.Default.Get(key, string.Empty);
+            if (string.IsNullOrEmpty(jsonValue))
+            {
+                return Task.FromResult(defaultValue);
+            }
+
+            return Task.FromResult(JsonSerializer.Deserialize<TValue>(jsonValue));
+        }
+
+        return Task.FromResult(Preferences.Default.Get(key, defaultValue));
+    }
+
+    public Task RemoveCacheAsync(string key)
+    {
+        Preferences.Default.Remove(key);
+        return Task.CompletedTask;
     }
 
     private async Task<Location?> GetCachedLocationAsync()

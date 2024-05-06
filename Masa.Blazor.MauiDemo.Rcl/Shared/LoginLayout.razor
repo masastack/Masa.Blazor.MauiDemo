@@ -1,0 +1,25 @@
+﻿@inherits LayoutComponentBase
+@inject IPlatformIntegration PlatformIntegration
+
+<MApp>
+    <MMain>
+        <PPageStack TabbedPatterns="@( ["/login$"])"
+                    Class="fill-height">
+            <MContainer Style="height: 100%">
+                @Body
+            </MContainer>
+        </PPageStack>
+    </MMain>
+</MApp>
+
+@code {
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await PlatformIntegration.InitThemeAsync();
+        }
+    }
+
+}

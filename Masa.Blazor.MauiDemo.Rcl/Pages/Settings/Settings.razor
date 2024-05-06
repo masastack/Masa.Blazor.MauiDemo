@@ -1,13 +1,15 @@
 ﻿@page "/settings"
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IPopupService PopupService
 
 <PageTitle>Settings</PageTitle>
 
-<PPageStackItemInit Title="Settings">
-</PPageStackItemInit>
+<PStackPageBarInit Title="Settings">
+</PStackPageBarInit>
 
 <div class="pa-4">
     <MList Class="rounded mb-3">
-        <MListItem Href="/settings/dark-mode">
+        <MListItem Href="/settings/dark-mode" data-page-stack-strategy>
             <MListItemContent>
                 <MListItemTitle>Dark mode</MListItemTitle>
             </MListItemContent>
@@ -16,8 +18,8 @@
             </MListItemAction>
         </MListItem>
     </MList>
-    <MList Class="rounded">
-        <MListItem Href="/settings/about-us">
+    <MList Class="rounded mb-3">
+        <MListItem Href="/settings/about-us" data-page-stack-strategy>
             <MListItemContent>
                 <MListItemTitle>About us</MListItemTitle>
             </MListItemContent>
@@ -26,4 +28,24 @@
             </MListItemAction>
         </MListItem>
     </MList>
+    <MList Class="rounded">
+        <MListItem OnClick="@Logout">
+            <MListItemContent>
+                <MListItemTitle Class="error--text font-weight-bold text-center">Log Out</MListItemTitle>
+            </MListItemContent>
+        </MListItem>
+    </MList>
 </div>
+
+@code {
+
+    private async Task Logout()
+    {
+        var confirmed = await PopupService.ConfirmAsync("Log out", "Are you sure you want to log out?", AlertTypes.Warning);
+        if (confirmed)
+        {
+            ((MauiDemoAuthenticationStateProvider)AuthenticationStateProvider).Logout();
+        }
+    }
+
+}

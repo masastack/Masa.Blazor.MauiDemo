@@ -1,19 +1,19 @@
 ﻿@page "/shop/product/{id:guid}"
-@using Masa.Blazor.MauiDemo.Rcl.Services
 @using Microsoft.JSInterop
 @inject ProductService ProductService
 @inject IPlatformIntegration PlatformIntegration
 @inject IJSRuntime JSRuntime
 @inject NavigationManager NavigationManager
+@inject PageStackNavController NavController
 @inject IPopupService PopupService
 @inherits PStackPageBase
 
 <PageTitle>@(_product?.Name ?? "Product")</PageTitle>
 
-<PPageStackItemInit ContentClass="pt-0">
+<PStackPageBarInit>
     <ActionContent>
-        <MButton Icon Href="/">
-            <MIcon>mdi-home-outline</MIcon>
+        <MButton IconName="mdi-home-outline"
+                 OnClick="@(() => NavController.Clear())">
         </MButton>
         <MBottomSheet>
             <ActivatorContent>
@@ -47,7 +47,7 @@
             </OutcomeContent>
         </MBottomSheet>
     </ActionContent>
-</PPageStackItemInit>
+</PStackPageBarInit>
 
 @if (_product is not null)
 {

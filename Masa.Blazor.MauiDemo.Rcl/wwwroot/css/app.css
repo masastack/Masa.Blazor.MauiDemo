@@ -8,10 +8,6 @@
   background: #000000;
 }
 
-.m-page-stack-item {
-  background: var(--m-theme-surface) !important;
-}
-
 .m-expansion-panel::before {
   box-shadow: none;
 }
@@ -58,4 +54,12 @@
 .m-simple-checkbox.priority--medium .m-icon,
 .m-simple-checkbox.priority--low .m-icon{
   color: inherit;
+}
+
+.login {
+  text-align: center;
+}
+
+.login > * {
+  margin-bottom: 24px !important;
 }

@@ -5,12 +5,24 @@
 @using Router = Microsoft.AspNetCore.Components.Routing.Router
 @inject IPlatformIntegration PlatformNavigation
 @inject MasaBlazor MasaBlazor
+@using Masa.Blazor.MauiDemo.Rcl.Pages.Login
 
 <Router AppAssembly="@typeof(Main).Assembly"
         AdditionalAssemblies="new[] { typeof(MainLayout).Assembly }"
         OnNavigateAsync="HandleOnNavigate">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
+            <NotAuthorized>
+                @if (context.User.Identity?.IsAuthenticated is not true)
+                {
+                    <RedirectToLogin/>
+                }
+                else
+                {
+                    <p role="alert">You are not authorized to access the resource.</p>
+                }
+            </NotAuthorized>
+        </AuthorizeRouteView>
         <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
     </Found>
     <NotFound>

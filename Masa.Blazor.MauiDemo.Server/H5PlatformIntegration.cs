@@ -70,4 +70,20 @@ public class H5PlatformIntegration : IPlatformIntegration
     {
         return await _jsRuntime.InvokeAsync<bool>("eval", "window.matchMedia('(prefers-color-scheme: dark)').matches");
     }
+
+    public async Task SetCacheAsync<TValue>(string key, TValue value)
+    {
+        await _localStorage.SetItemAsync(key, value);
+    }
+
+    public async Task<TValue> GetCacheAsync<TValue>(string key, TValue defaultValue)
+    {
+        var result = await _localStorage.GetItemAsync<TValue>(key);
+        return result ?? defaultValue;
+    }
+
+    public Task RemoveCacheAsync(string key)
+    {
+        return _localStorage.RemoveItemAsync(key);
+    }
 }

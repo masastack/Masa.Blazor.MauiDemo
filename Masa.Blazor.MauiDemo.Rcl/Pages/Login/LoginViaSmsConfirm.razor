@@ -1,0 +1,30 @@
+﻿@page "/login-via-sms-confirm/{phone}"
+@attribute [AllowAnonymous]
+@layout LoginLayout
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IPopupService PopupService
+
+<Masa.Blazor.MauiDemo.Rcl.Pages.Login.Components.PhoneNumberConfirm
+    PageTitle="Login via SMS"
+    PhoneNumber="@Phone"
+    OnConfirm="@HandleOnConfirm"/>
+
+@code {
+
+    [Parameter] public string Phone { get; set; } = null!;
+
+    private async Task HandleOnConfirm(string confirmCode)
+    {
+        PopupService.ShowProgressCircular();
+        StateHasChanged();
+
+        var authenticationState = await ((MauiDemoAuthenticationStateProvider)AuthenticationStateProvider).LoginViaSmsAsync(Phone, confirmCode);
+        PopupService.HideProgressCircular();
+        if (authenticationState.User.Identity?.IsAuthenticated is true)
+        {
+            NavigationManager.NavigateTo("/");
+        }
+    }
+
+}

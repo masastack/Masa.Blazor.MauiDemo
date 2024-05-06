@@ -1,3 +1,4 @@
+@using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Web
 @using Microsoft.AspNetCore.Components.Routing
 @using BlazorComponent
@@ -8,3 +9,7 @@
 @using Masa.Blazor.MauiDemo.Rcl.Models
 @using Masa.Blazor.MauiDemo.Rcl.Data
 @using Masa.Blazor.MauiDemo.Rcl.Components
+@using Masa.Blazor.MauiDemo.Rcl.Auth
+@using Masa.Blazor.MauiDemo.Rcl.Services
+@using Microsoft.AspNetCore.Components.Authorization
+@attribute [Authorize]

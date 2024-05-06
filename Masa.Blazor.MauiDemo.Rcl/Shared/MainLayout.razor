@@ -4,10 +4,17 @@
 <MApp>
     <MMain>
         <MErrorHandler>
-            <PPageStack TabbedPatterns="@( ["^/$", "/todo", "/user"])"
-                        SelfPatterns="@( ["/todo", "/shop/search"])">
-                @Body
-            </PPageStack>
+            <AuthorizeView>
+                <Authorized>
+                    <PPageStack TabbedPatterns="@( ["^/$", "/todo", "/user"])"
+                                SelfPatterns="@( ["/todo"])">
+                        @Body
+                    </PPageStack>
+                </Authorized>
+                <NotAuthorized>
+                    @Body
+                </NotAuthorized>
+            </AuthorizeView>
         </MErrorHandler>
     </MMain>
 
