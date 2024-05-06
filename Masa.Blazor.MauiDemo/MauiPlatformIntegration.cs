@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui.Core;
 using Masa.Blazor.MauiDemo.Platforms;
+using System.Text.Json;
 
 namespace Masa.Blazor.MauiDemo;
 
@@ -119,12 +120,34 @@ public class MauiPlatformIntegration : IPlatformIntegration
 
     public Task SetCacheAsync<TValue>(string key, TValue value)
     {
-        Preferences.Default.Set(key, value);
+        var type = typeof(TValue);
+        if (type != typeof(string) && type.IsClass)
+        {
+            var jsonValue = JsonSerializer.Serialize(value);
+            Preferences.Default.Set(key, jsonValue);
+        }
+        else
+        { 
+            Preferences.Default.Set(key, value);
+        }
+
         return Task.CompletedTask;
     }
 
     public Task<TValue> GetCacheAsync<TValue>(string key, TValue defaultValue)
     {
+        var type = typeof(TValue);
+        if (type != typeof(string) && type.IsClass)
+        {
+            var jsonValue = Preferences.Default.Get(key, string.Empty);
+            if (string.IsNullOrEmpty(jsonValue))
+            {
+                return Task.FromResult(defaultValue);
+            }
+
+            return Task.FromResult(JsonSerializer.Deserialize<TValue>(jsonValue));
+        }
+
         return Task.FromResult(Preferences.Default.Get(key, defaultValue));
     }
 
