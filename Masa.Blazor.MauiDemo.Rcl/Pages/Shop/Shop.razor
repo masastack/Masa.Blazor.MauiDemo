@@ -109,7 +109,6 @@
         }
 
         args.Status = appendProducts.Count < pageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
-        Console.Out.WriteLine("[Shop] HandleOnLoad _products:{0}", _products.Count);
     }
 
     private async Task HandleOnRefresh()
