@@ -32,13 +32,15 @@
         </div>
     </MAppBar>
 
-    <div style="margin-top: 56px;">
+    <MPullRefresh Style="margin-top: 56px;"
+                  OnRefresh="@HandleOnRefresh">
         @RenderProductList(_products)
-    </div>
 
-    <MInfiniteScroll Parent="@("window")"
-                     OnLoad="@HandleOnLoad">
-    </MInfiniteScroll>
+        <MInfiniteScroll Parent="@("window")"
+                         OnLoad="@HandleOnLoad"
+                         @ref="_infiniteScroll">
+        </MInfiniteScroll>
+    </MPullRefresh>
 </div>
 
 @code
@@ -80,6 +82,7 @@
 
     private int _page = 1;
     private string? _pinnedSearch;
+    private MInfiniteScroll? _infiniteScroll;
 
     private List<Product> _products = [];
 
@@ -92,10 +95,31 @@
 
     private async Task HandleOnLoad(InfiniteScrollLoadEventArgs args)
     {
-        var pageSize = _page == 1 ? 10 : 5;
+        var isFirstLoad = _page == 1;
+        var pageSize = isFirstLoad ? 10 : 5;
         var appendProducts = await ProductService.GetProductsAsync(_page++, pageSize);
-        _products.AddRange(appendProducts);
+
+        if (isFirstLoad)
+        {
+            _products = appendProducts;
+        }
+        else
+        {
+            _products.AddRange(appendProducts);
+        }
+
         args.Status = appendProducts.Count < pageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
+        Console.Out.WriteLine("[Shop] HandleOnLoad _products:{0}", _products.Count);
+    }
+
+    private async Task HandleOnRefresh()
+    {
+        _page = 1;
+
+        if (_infiniteScroll != null)
+        {
+            await _infiniteScroll.ResetAsync();
+        }
     }
 
     private void HandleOnTextFieldClick()
