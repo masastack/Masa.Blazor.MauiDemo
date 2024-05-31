@@ -93,22 +93,31 @@
         _pinnedSearch = new[] { "饮水机", "纯水机", "净化器" }.ElementAt(Random.Shared.Next(0, 2));
     }
 
+    
+    int pageSize = 5;
     private async Task HandleOnLoad(InfiniteScrollLoadEventArgs args)
     {
-        var isFirstLoad = _page == 1;
-        var pageSize = isFirstLoad ? 10 : 5;
-        var appendProducts = await ProductService.GetProductsAsync(_page++, pageSize);
+        List<Product> apiProducts;
 
-        if (isFirstLoad)
+        if (_page is 1)
         {
-            _products = appendProducts;
+            var multiple = 2;
+            apiProducts = await GetProducts(1, pageSize * multiple);
+            _products = apiProducts;
+            _page += multiple;
         }
         else
         {
-            _products.AddRange(appendProducts);
+            apiProducts = await GetProducts(_page, pageSize);
+            _products.AddRange(apiProducts);
+            _page++;
         }
 
-        args.Status = appendProducts.Count < pageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
+        args.Status = apiProducts.Count < pageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
+    }
+    private Task<List<Product>> GetProducts(int pageNumber, int pageSize)
+    {
+        return ProductService.GetProductsAsync(pageNumber, pageSize);
     }
 
     private async Task HandleOnRefresh()
