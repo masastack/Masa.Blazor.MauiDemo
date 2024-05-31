@@ -94,30 +94,23 @@
     }
 
     
-    int pageSize = 5;
     private async Task HandleOnLoad(InfiniteScrollLoadEventArgs args)
     {
-        List<Product> apiProducts;
+        var isFirstLoad = _page == 1;
+        var pageSize = isFirstLoad ? 10 : 5;
+        var appendProducts = await ProductService.GetProductsAsync(_page++, pageSize);
 
-        if (_page is 1)
+        if (isFirstLoad)
         {
-            var multiple = 2;
-            apiProducts = await GetProducts(1, pageSize * multiple);
-            _products = apiProducts;
-            _page += multiple;
+            _products = appendProducts;
+            _page++;
         }
         else
         {
-            apiProducts = await GetProducts(_page, pageSize);
-            _products.AddRange(apiProducts);
-            _page++;
+            _products.AddRange(appendProducts);
         }
 
-        args.Status = apiProducts.Count < pageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
-    }
-    private Task<List<Product>> GetProducts(int pageNumber, int pageSize)
-    {
-        return ProductService.GetProductsAsync(pageNumber, pageSize);
+        args.Status = appendProducts.Count < pageSize ? InfiniteScrollLoadStatus.Empty : InfiniteScrollLoadStatus.Ok;
     }
 
     private async Task HandleOnRefresh()
