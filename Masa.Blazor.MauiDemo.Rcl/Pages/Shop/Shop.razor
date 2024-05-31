@@ -93,6 +93,7 @@
         _pinnedSearch = new[] { "饮水机", "纯水机", "净化器" }.ElementAt(Random.Shared.Next(0, 2));
     }
 
+    
     private async Task HandleOnLoad(InfiniteScrollLoadEventArgs args)
     {
         var isFirstLoad = _page == 1;
@@ -102,6 +103,7 @@
         if (isFirstLoad)
         {
             _products = appendProducts;
+            _page++;
         }
         else
         {
