@@ -11,12 +11,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="~/" />
+    <link rel="icon" type="image/png" href="favicon.png"/>
     <link href="_content/Masa.Blazor/css/masa-blazor.min.css" rel="stylesheet">
+    <link href="_content/Masa.Blazor.MauiDemo.Rcl/css/materialdesign/v7.1.96/css/materialdesignicons.min.css" rel="stylesheet">
+    <link href="_content/Masa.Blazor.MauiDemo.Rcl/css/app.css" rel="stylesheet"/>
     <link href="css/site.css" rel="stylesheet" />
     <link href="Masa.Blazor.MauiDemo.Server.styles.css" rel="stylesheet" />
-    <link href="_content/Masa.Blazor.MauiDemo.Rcl/css/app.css" rel="stylesheet"/>
-    <link rel="icon" type="image/png" href="favicon.png"/>
-    <link href="_content/Masa.Blazor.MauiDemo.Rcl/css/materialdesign/v7.1.96/css/materialdesignicons.min.css" rel="stylesheet">
 
     <component type="typeof(HeadOutlet)" render-mode="Server" />
 </head>
@@ -35,7 +35,7 @@
     </div>
 
     <script src="_framework/blazor.server.js"></script>
-    <script src="_content/BlazorComponent/js/blazor-component.js"></script>
+    <script src="_content/Masa.Blazor/js/masa-blazor.js"></script>
     <script>
         window.__mauiDemo = {}
         window.__mauiDemo.getCurrentPosition = async function () {

@@ -1,6 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
-using BlazorComponent;
 using Masa.Blazor.MauiDemo.Platforms;
 
 namespace Masa.Blazor.MauiDemo.Rcl.Services;
@@ -35,7 +34,7 @@ public class UserService
                 // Because the token is fake, and it doesn't have a real expiration time,
                 // so we fake it here.
 
-                var expiresOn = TimeSpan.FromMinutes(1);
+                var expiresOn = TimeSpan.FromMinutes(5);
                 var expiredAt = DateTime.UtcNow.Add(expiresOn);
 
                 var token = new JwtToken(accessToken, expiredAt);

@@ -1,5 +1,4 @@
-﻿using BlazorComponent;
-using Masa.Blazor;
+﻿using Masa.Blazor;
 using Masa.Blazor.MauiDemo.Rcl.Auth;
 using Masa.Blazor.MauiDemo.Rcl.Services;
 using Masa.Blazor.Presets;
