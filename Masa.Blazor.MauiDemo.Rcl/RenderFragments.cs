@@ -1,5 +1,4 @@
-﻿using BlazorComponent;
-using Masa.Blazor.MauiDemo.Rcl.Models;
+﻿using Masa.Blazor.MauiDemo.Rcl.Models;
 using Microsoft.AspNetCore.Components;
 
 namespace Masa.Blazor.MauiDemo;
