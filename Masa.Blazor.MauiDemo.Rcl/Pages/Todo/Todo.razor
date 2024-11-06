@@ -2,7 +2,9 @@
 @page "/todo/tag/{tag:int}"
 @inject ProDatabase ProDatabase
 @inject NavigationManager NavigationManager
+@inject PageStackNavController PageStackNavController
 @inject IPopupService PopupService
+@using Masa.Blazor.Presets.PageStack.NavController
 @implements IDisposable
 
 <PageTitle>To do</PageTitle>
@@ -194,7 +196,6 @@
     private List<TodoTag> _tags = new();
 
     private List<StringNumber> _expandedPriority = [0, 1, 2, 3, -1];
-    private IDisposable? _locationChangingRegistration;
 
     private TodoTag? CurrentTag => _tags.FirstOrDefault(t => t.Id == Tag);
 
@@ -204,35 +205,20 @@
     {
         base.OnInitialized();
 
-        _locationChangingRegistration = NavigationManager.RegisterLocationChangingHandler(LocationChangingHandler);
+        PageStackNavController.TabChanged += PageStackNavControllerOnTabChanged;
     }
 
-    private async ValueTask LocationChangingHandler(LocationChangingContext context)
+    private void PageStackNavControllerOnTabChanged(object? sender, PageStackTabChangedEventArgs e)
     {
-        // Close all dialogs or sheets when navigating to other pages
-
-        string absolutePath;
-        if (!context.TargetLocation.StartsWith("http"))
-        {
-            absolutePath = NavigationManager.ToAbsoluteUri(context.TargetLocation).AbsolutePath;
-        }
-        else if (Uri.TryCreate(context.TargetLocation, UriKind.Absolute, out var uri))
-        {
-            absolutePath = uri.AbsolutePath;
-        }
-        else
+        if (e.IsMatch("/todo"))
         {
             return;
         }
         
-        if (absolutePath == "/todo")
-        {
-            return;
-        }
-
+        // Hide sheets when navigating to other tabs (for example, go back by the system back button)
         _taskSheet.Hide();
         _tagSheet = false;
-        await InvokeAsync(StateHasChanged).ConfigureAwait(false);
+        InvokeAsync(StateHasChanged);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -405,7 +391,7 @@
 
     public void Dispose()
     {
-        _locationChangingRegistration?.Dispose();
+        PageStackNavController.TabChanged -= PageStackNavControllerOnTabChanged;
     }
 
 }
