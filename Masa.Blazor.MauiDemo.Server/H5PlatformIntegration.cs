@@ -1,5 +1,4 @@
-﻿using BlazorComponent;
-using Masa.Blazor.MauiDemo.Platforms;
+﻿using Masa.Blazor.MauiDemo.Platforms;
 using Microsoft.JSInterop;
 
 namespace Masa.Blazor.MauiDemo.Server;
