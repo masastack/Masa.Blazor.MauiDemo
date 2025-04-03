@@ -1,4 +1,5 @@
-﻿@inherits LayoutComponentBase
+﻿@using Masa.Blazor.Presets.PageStack
+@inherits LayoutComponentBase
 @inject IPlatformIntegration PlatformIntegration
 
 <MApp>
@@ -6,8 +7,7 @@
         <MErrorHandler>
             <AuthorizeView>
                 <Authorized>
-                    <PPageStack TabbedPatterns="@( ["^/$", "/todo", "/user"])"
-                                SelfPatterns="@( ["/todo"])">
+                    <PPageStack TabRules="@_tabRules">
                         @Body
                     </PPageStack>
                 </Authorized>
@@ -40,6 +40,12 @@
 </MApp>
 
 @code {
+
+    private static HashSet<TabRule> _tabRules = [
+        new TabRule("^/$"),
+        new TabRule("/todo", Self: true),
+        new TabRule("/user")
+    ];
 
     private StringNumber? _current;
 

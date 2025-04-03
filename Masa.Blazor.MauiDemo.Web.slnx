@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="Masa.Blazor.MauiDemo.Rcl/Masa.Blazor.MauiDemo.Rcl.csproj" />
+  <Project Path="Masa.Blazor.MauiDemo.Server/Masa.Blazor.MauiDemo.Server.csproj" />
+</Solution>
