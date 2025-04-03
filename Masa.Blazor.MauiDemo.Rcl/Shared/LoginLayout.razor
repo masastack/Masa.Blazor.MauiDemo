@@ -1,9 +1,10 @@
-﻿@inherits LayoutComponentBase
+﻿@using Masa.Blazor.Presets.PageStack
+@inherits LayoutComponentBase
 @inject IPlatformIntegration PlatformIntegration
 
 <MApp>
     <MMain>
-        <PPageStack TabbedPatterns="@( ["/login$"])"
+        <PPageStack TabRules="@_tabRules"
                     Class="fill-height">
             <MContainer Style="height: 100%">
                 @Body
@@ -13,6 +14,8 @@
 </MApp>
 
 @code {
+
+    private static HashSet<TabRule> _tabRules = [new TabRule("/login$")];
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {

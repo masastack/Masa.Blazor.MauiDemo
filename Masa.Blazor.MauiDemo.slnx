@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Masa.Blazor.MauiDemo.Web/">
+    <Project Path="Masa.Blazor.MauiDemo.Rcl/Masa.Blazor.MauiDemo.Rcl.csproj" />
+    <Project Path="Masa.Blazor.MauiDemo.Server/Masa.Blazor.MauiDemo.Server.csproj" />
+  </Folder>
+  <Project Path="../../opens/Masa.Blazor/src/Masa.Blazor/Masa.Blazor.csproj" />
+  <Project Path="Masa.Blazor.MauiDemo.Platforms/Masa.Blazor.MauiDemo.Platforms.csproj" />
+  <Project Path="Masa.Blazor.MauiDemo/Masa.Blazor.MauiDemo.csproj">
+    <Deploy Solution="Debug|*" />
+  </Project>
+</Solution>
