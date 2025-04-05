@@ -2,6 +2,14 @@
 
 public interface IPlatformIntegration
 {
+    /// <summary>
+    /// 测试用 记得删除/重写
+    /// </summary>
+    /// <remarks>
+    /// <para> true => 全屏 </para>
+    /// <para> false => 取消全屏 状态栏green 导航栏 blue</para>
+    /// </remarks>
+    void FullWVTest(bool tf);
     Task<GeoCoordinate?> GetCachedCoordinateAsync();
 
     Task<GeoCoordinate?> GetCurrentCoordinateAsync();
