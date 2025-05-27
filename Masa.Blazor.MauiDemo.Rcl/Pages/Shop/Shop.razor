@@ -1,6 +1,8 @@
 ﻿@page "/"
+@using Masa.Blazor.Presets.PageStack.NavController
 @inject ProductService ProductService
 @inject PageStackNavController NavController
+@implements IDisposable
 
 <PageTitle>Shop</PageTitle>
 
@@ -33,7 +35,8 @@
     </MAppBar>
 
     <MPullRefresh Style="margin-top: 56px;"
-                  OnRefresh="@HandleOnRefresh">
+                  OnRefresh="@HandleOnRefresh"
+                  @ref="_pullToRefresh">
         @RenderProductList(_products)
 
         <MInfiniteScroll Parent="@("window")"
@@ -83,6 +86,7 @@
     private int _page = 1;
     private string? _pinnedSearch;
     private MInfiniteScroll? _infiniteScroll;
+    private MPullRefresh? _pullToRefresh;
 
     private List<Product> _products = [];
 
@@ -91,9 +95,15 @@
         base.OnInitialized();
 
         _pinnedSearch = new[] { "饮水机", "纯水机", "净化器" }.ElementAt(Random.Shared.Next(0, 2));
+
+        NavController.TabRefreshRequested += NavControllerOnTabRefreshRequested;
     }
 
-    
+    private void NavControllerOnTabRefreshRequested(object? sender, PageStackTabRefreshRequestedEventArgs e)
+    {
+        _ = _pullToRefresh?.SimulateRefreshAsync();
+    }
+
     private async Task HandleOnLoad(InfiniteScrollLoadEventArgs args)
     {
         var isFirstLoad = _page == 1;
@@ -127,4 +137,10 @@
     {
         NavController.Push($"/shop/search?placeholder={_pinnedSearch}");
     }
+    
+    public void Dispose()
+    {
+        NavController.TabRefreshRequested -= NavControllerOnTabRefreshRequested;
+    }
 }
+
