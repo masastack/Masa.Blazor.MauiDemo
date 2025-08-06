@@ -3,8 +3,7 @@
 @inject ProductService ProductService
 @inherits PStackPageBase
 
-<PStackPageBarInit Color="surface"
-                    RerenderKey="@_searchKey">
+<PStackPageBar Color="surface">
     <BarContent>
         <MButton Icon OnClick="@context.GoBack">
             <MIcon>$goBack</MIcon>
@@ -34,8 +33,7 @@
             Search
         </MButton>
     </BarContent>
-</PStackPageBarInit>
-
+</PStackPageBar>
 @if (_products != null)
 {
     <div class="px-3">

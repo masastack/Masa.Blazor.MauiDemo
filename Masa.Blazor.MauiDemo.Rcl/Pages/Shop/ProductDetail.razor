@@ -10,7 +10,7 @@
 
 <PageTitle>@(_product?.Name ?? "Product")</PageTitle>
 
-<PStackPageBarInit>
+<PStackPageBar>
     <ActionContent>
         <MButton IconName="mdi-home-outline"
                  OnClick="@(() => NavController.Clear())">
@@ -47,7 +47,7 @@
             </OutcomeContent>
         </MBottomSheet>
     </ActionContent>
-</PStackPageBarInit>
+</PStackPageBar>
 
 @if (_product is not null)
 {
