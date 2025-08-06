@@ -6,7 +6,7 @@
 @inject IPopupService PopupService
 @inject NavigationManager NavigationManager
 @inject PageStackNavController NavController
-
+@inject IPlatformIntegration PlatformIntegration
 <div class="d-flex flex-column justify-space-between fill-height">
     <div class="login">
         <div class="text-right">
@@ -79,6 +79,18 @@
             </MButton>
         </div>
     </div>
+
+    @*测试用 记得删除 start*@
+    <div class="d-flex justify-space-around mx-auto"
+         style="width: 70vw">
+        <MButton XLarge OnClick="@(() => PlatformIntegration.FullWVTest(true))">
+            Full
+        </MButton>
+        <MButton XLarge OnClick="@(() => PlatformIntegration.FullWVTest(false))">
+            NotFull
+        </MButton>
+    </div>
+    @*测试用 记得删除 end*@
 
     <div class="mb-12">
         <MDivider Center Class="mb-4">Or</MDivider>

@@ -6,6 +6,23 @@ namespace Masa.Blazor.MauiDemo;
 
 public class MauiPlatformIntegration : IPlatformIntegration
 {
+    /// <inheritdoc/>
+    public void FullWVTest(bool tf)
+    {
+#if ANDROID
+        if (tf)
+        {
+            MainActivity.Instance?.SetFullWebView();
+        }
+        else
+        {
+            MainActivity.Instance?.ClearFullWV(Android.Graphics.Color.Green, Android.Graphics.Color.Blue);
+        }
+#endif
+    }
+
+
+
     private readonly MasaBlazor _masaBlazor;
 
     public MauiPlatformIntegration(MasaBlazor masaBlazor)
