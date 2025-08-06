@@ -1,5 +1,4 @@
 ﻿@page "/user"
-@inject MasaBlazor MasaBlazor
 
 <PageTitle>User</PageTitle>
 
@@ -18,9 +17,7 @@
         <MSpacer/>
         <MButton Icon 
                  Href="/settings"
-                 data-page-stack-strategy
-                 Light="@(MasaBlazor.Theme.Dark)"
-                 Dark="@(!MasaBlazor.Theme.Dark)">
+                 data-page-stack-strategy>
             <MIcon>mdi-cog-outline</MIcon>
         </MButton>
     </ChildContent>

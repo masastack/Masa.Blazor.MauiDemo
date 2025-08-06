@@ -10,44 +10,47 @@
 
 <PageTitle>@(_product?.Name ?? "Product")</PageTitle>
 
-<PStackPageBarInit>
-    <ActionContent>
-        <MButton IconName="mdi-home-outline"
-                 OnClick="@(() => NavController.Clear())">
-        </MButton>
-        <MBottomSheet>
-            <ActivatorContent>
-                <MButton Icon @attributes="@context.Attrs">
-                    <MIcon>mdi-share-outline</MIcon>
-                </MButton>
-            </ActivatorContent>
-            <OutcomeContent>
-                <div class="d-flex align-start" style="min-height: 136px;">
-                    <div class="d-inline-flex flex-column justify-center mx-4"
-                         @onclick="ShareToWeChat">
-                        <MAvatar Color="#07c160">
-                            <MIcon Color="white" Size="24">$wechat</MIcon>
-                        </MAvatar>
-                        <span class="caption mt-1">WeChat</span>
-                    </div>
-                    <div class="d-inline-flex flex-column justify-center mx-4"
-                         @onclick="@CopyLink">
-                        <MAvatar Color="orange">
-                            <MIcon Dark>mdi-link-variant</MIcon>
-                        </MAvatar>
-                        <span class="caption mt-1">Copy link</span>
-                    </div>
+<MToolbar Color="transparent"
+          Flat
+          Width="@("100%")"
+          Absolute>
+    <MButton IconName="$goBack" OnClick="@(() => NavController.GoBack())"></MButton>
+    <MSpacer/>
+    <MButton IconName="mdi-home-outline"
+             OnClick="@(() => NavController.Clear())">
+    </MButton>
+    <MBottomSheet>
+        <ActivatorContent>
+            <MButton Icon @attributes="@context.Attrs">
+                <MIcon>mdi-share-outline</MIcon>
+            </MButton>
+        </ActivatorContent>
+        <OutcomeContent>
+            <div class="d-flex align-start" style="min-height: 136px;">
+                <div class="d-inline-flex flex-column justify-center mx-4"
+                     @onclick="ShareToWeChat">
+                    <MAvatar Color="#07c160">
+                        <MIcon Color="white" Size="24">$wechat</MIcon>
+                    </MAvatar>
+                    <span class="caption mt-1">WeChat</span>
                 </div>
+                <div class="d-inline-flex flex-column justify-center mx-4"
+                     @onclick="@CopyLink">
+                    <MAvatar Color="orange">
+                        <MIcon Dark>mdi-link-variant</MIcon>
+                    </MAvatar>
+                    <span class="caption mt-1">Copy link</span>
+                </div>
+            </div>
 
-                <MButton Block
-                         OnClick="@context.Close"
-                         Class="text-capitalize">
-                    Cancel
-                </MButton>
-            </OutcomeContent>
-        </MBottomSheet>
-    </ActionContent>
-</PStackPageBarInit>
+            <MButton Block
+                     OnClick="@context.Close"
+                     Class="text-capitalize">
+                Cancel
+            </MButton>
+        </OutcomeContent>
+    </MBottomSheet>
+</MToolbar>
 
 @if (_product is not null)
 {
@@ -115,7 +118,8 @@
                         <div style="min-height: 60vh">
                             <div>
                                 <p class="text-h7">七天无理由退货</p>
-                                <p class="body-2 grey--text">满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。</p>
+                                <p class="body-2 grey--text">
+                                    满足7天无理由退换货申请的前提下，包邮商品需要买家承担退货邮费，非包邮商品需要买家承担发货和退货邮费。</p>
                             </div>
                         </div>
                         <MButton Block
@@ -141,7 +145,9 @@
                     <MListItemSubtitle Class="my-2">
                         <b>@_availableForSale</b> 件在售商品
                     </MListItemSubtitle>
-                    <MListItemSubtitle>朗诗德是一家专业致力于健康饮水设备的设计、开发、生产和销售的大型企业。公司通过了ISO9001、ISO14001、OHSAS18001认证；其产品均通过CCC、CE、CB等多项国内外权威认证，并获得国家卫生部门颁发的卫生批件及多项国内外专利，畅销海内外。</MListItemSubtitle>
+                    <MListItemSubtitle>
+                        朗诗德是一家专业致力于健康饮水设备的设计、开发、生产和销售的大型企业。公司通过了ISO9001、ISO14001、OHSAS18001认证；其产品均通过CCC、CE、CB等多项国内外权威认证，并获得国家卫生部门颁发的卫生批件及多项国内外专利，畅销海内外。
+                    </MListItemSubtitle>
                 </MListItemContent>
             </MListItem>
         </MSheet>

@@ -68,6 +68,11 @@ public class ProductService
     {
         await Task.Delay(500);
 
+        if (page == 1)
+        {
+            ShuffleList(_data);
+        }
+
         var result = _data.AsQueryable();
         if (!string.IsNullOrWhiteSpace(search))
         {
@@ -94,5 +99,16 @@ public class ProductService
         await Task.Delay(500);
 
         return _data.Count(p => p.Brand.Equals(brand, StringComparison.OrdinalIgnoreCase));
+    }
+    
+    private static void ShuffleList<T>(List<T> list)
+    {
+        Random rng = new();
+        int n = list.Count;
+        while (n > 1)
+        {
+            int k = rng.Next(n--);
+            (list[n], list[k]) = (list[k], list[n]); // Swap elements
+        }
     }
 }

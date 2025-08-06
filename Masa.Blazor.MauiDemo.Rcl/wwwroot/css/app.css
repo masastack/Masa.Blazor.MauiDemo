@@ -1,13 +1,5 @@
 ﻿/* reset */
 
-.theme--light.m-app-bar.m-toolbar.m-sheet {
-  background: #FFFFFF;
-}
-
-.theme--dark.m-app-bar.m-toolbar.m-sheet {
-  background: #000000;
-}
-
 .m-expansion-panel::before {
   box-shadow: none;
 }

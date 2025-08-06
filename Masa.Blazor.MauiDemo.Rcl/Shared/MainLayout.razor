@@ -7,7 +7,8 @@
         <MErrorHandler>
             <AuthorizeView>
                 <Authorized>
-                    <PPageStack TabRules="@_tabRules">
+                    <PPageStack TabRules="@_tabRules"
+                                AppBarAlwaysVisible="false">
                         @Body
                     </PPageStack>
                 </Authorized>
@@ -24,28 +25,34 @@
                        Shift
                        Color="primary"
                        @bind-Value="_current">
-        <MButton Href="/">
-            <span>Shop</span>
-            <MIcon>@ShopIcon</MIcon>
-        </MButton>
-        <MButton Href="/todo">
-            <span>To do</span>
-            <MIcon>@TodoIcon</MIcon>
-        </MButton>
-        <MButton Href="/user">
-            <span>User</span>
-            <MIcon>@UserIcon</MIcon>
-        </MButton>
+        <PPageStackTab Href="/" TabRule="Home">
+            <MButton @attributes="@context.Attrs">
+                <span>Shop</span>
+                <MIcon>@ShopIcon</MIcon>
+            </MButton>
+        </PPageStackTab>
+        <PPageStackTab Href="/todo" TabRule="Todo">
+            <MButton @attributes="@context.Attrs">
+                <span>To do</span>
+                <MIcon>@TodoIcon</MIcon>
+            </MButton>
+        </PPageStackTab>
+        <PPageStackTab Href="/user" TabRule="User">
+            <MButton @attributes="@context.Attrs">
+                <span>User</span>
+                <MIcon>@UserIcon</MIcon>
+            </MButton>
+        </PPageStackTab>
     </MBottomNavigation>
 </MApp>
 
 @code {
 
-    private static HashSet<TabRule> _tabRules = [
-        new TabRule("^/$"),
-        new TabRule("/todo", Self: true),
-        new TabRule("/user")
-    ];
+    internal static TabRule Home => new TabRule("^/$");
+    internal static TabRule Todo => new TabRule("/todo", Self: true);
+    internal static TabRule User => new TabRule("/user");
+
+    private static HashSet<TabRule> _tabRules = [Home, Todo, User];
 
     private StringNumber? _current;
 
